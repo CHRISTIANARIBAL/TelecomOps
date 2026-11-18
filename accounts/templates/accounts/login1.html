@@ -1,0 +1,397 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fff8f6">
+    <title>Sign In | TelecomOps</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+
+    <style>
+        .brand-panel {
+            position: relative;
+            isolation: isolate;
+            background-color: #fff8f6;
+            background-image:
+                linear-gradient(90deg,
+                    rgba(255,248,246,.99) 0%,
+                    rgba(255,248,246,.96) 34%,
+                    rgba(255,248,246,.78) 53%,
+                    rgba(255,248,246,.20) 78%,
+                    rgba(255,248,246,.06) 100%),
+                linear-gradient(0deg,
+                    rgba(255,248,246,.08) 0%,
+                    rgba(255,248,246,0) 45%),
+                url("{% static 'images/login_mountains_birds.png' %}");
+            background-repeat: no-repeat;
+            background-position: center, center, center;
+            background-size: cover;
+        }
+
+        .wave-art {
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 7.8rem;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1023px) {
+            .brand-panel {
+                min-height: 650px;
+                background-position: center, center, 58% center;
+            }
+            .wave-art { height: 7rem; }
+        }
+
+        @media (max-width: 639px) {
+            .brand-panel {
+                min-height: 610px;
+                background-image:
+                    linear-gradient(90deg, rgba(255,248,246,.94), rgba(255,248,246,.78)),
+                    url("{% static 'images/login_mountains_birds.png' %}");
+                background-position: center, 62% center;
+                background-size: cover;
+            }
+            .wave-art { height: 6rem; }
+        }
+
+        .bird-flock {
+            position: absolute;
+            z-index: 5;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .flying-bird {
+            position: absolute;
+            width: var(--bird-size, 34px);
+            height: auto;
+            color: #54251f;
+            opacity: .88;
+            filter: drop-shadow(0 1px 1px rgba(90, 35, 25, .12));
+            animation:
+                bird-travel var(--bird-duration, 22s) linear infinite,
+                bird-drift var(--bird-drift-duration, 3.8s) ease-in-out infinite;
+            animation-delay: var(--bird-delay, 0s), var(--bird-drift-delay, 0s);
+            will-change: transform;
+        }
+        .flying-bird svg { display: block; width: 100%; height: auto; }
+        @keyframes bird-travel {
+            0%   { transform: translate3d(110%, 0, 0) scale(var(--bird-scale, 1)); }
+            100% { transform: translate3d(-180%, 0, 0) scale(var(--bird-scale, 1)); }
+        }
+        @keyframes bird-drift {
+            0%, 100% { margin-top: 0; }
+            50%      { margin-top: -11px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .flying-bird { animation: none; opacity: .72; }
+            .flying-bird:nth-child(n+5) { display: none; }
+        }
+
+    </style>
+</head>
+
+<body class="min-h-screen bg-white text-[#241B1C] antialiased">
+    <main class="min-h-screen grid grid-cols-1 lg:grid-cols-[55.8%_44.2%]">
+
+        <!-- LEFT: BRAND STORY AND MOUNTAIN LANDSCAPE -->
+        <section class="brand-panel relative isolate flex min-h-[760px] flex-col overflow-hidden px-8 py-8 sm:px-10 lg:min-h-screen lg:px-10 lg:py-8">
+
+            <!-- Animated flock: decorative birds flying across the sunrise -->
+            <div class="bird-flock" aria-hidden="true">
+                <span class="flying-bird" style="top: 11%; left: 0%; --bird-size: 42px; --bird-duration: 25s; --bird-delay: -17s; --bird-drift-duration: 3.6s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 19%; left: 0%; --bird-size: 29px; --bird-duration: 19s; --bird-delay: -8s; --bird-drift-duration: 3.1s; --bird-drift-delay: -1s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 25%; left: 0%; --bird-size: 23px; --bird-duration: 29s; --bird-delay: -23s; --bird-drift-duration: 4.2s; --bird-drift-delay: -2s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 14%; left: 0%; --bird-size: 31px; --bird-duration: 22s; --bird-delay: -3s; --bird-drift-duration: 3.4s; --bird-drift-delay: -2.3s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 31%; left: 0%; --bird-size: 19px; --bird-duration: 31s; --bird-delay: -13s; --bird-drift-duration: 4.6s; --bird-drift-delay: -1.5s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 8%; left: 0%; --bird-size: 25px; --bird-duration: 27s; --bird-delay: -20s; --bird-drift-duration: 3.2s; --bird-drift-delay: -.7s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 22%; left: 0%; --bird-size: 36px; --bird-duration: 24s; --bird-delay: -11s; --bird-drift-duration: 3.9s; --bird-drift-delay: -2.8s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+                <span class="flying-bird" style="top: 36%; left: 0%; --bird-size: 22px; --bird-duration: 33s; --bird-delay: -6s; --bird-drift-duration: 4.1s; --bird-drift-delay: -3s;">
+                    <svg viewBox="0 0 64 36"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg>
+                </span>
+            </div>
+
+
+
+            <!-- TelecomOps brand -->
+            <div class="relative z-10 flex items-center gap-4">
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#C9152B] to-[#85091B] text-white shadow-lg shadow-[#991126]/20">
+                    <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3.5 8.5h5l2.2 7 2.2-7h7.6M4.5 15.5h4m7 0h4" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="border-l-2 border-[#A10E20]/80 pl-4">
+                    <h1 class="text-2xl font-extrabold leading-none tracking-tight text-[#21191A] sm:text-[1.8rem]">
+                        Telecom<span class="text-[#A10E20]">Ops</span>
+                    </h1>
+                    <p class="mt-2 text-[10px] font-semibold tracking-[0.22em] text-[#6F6265] sm:text-xs">
+                        OPERATIONS MANAGEMENT
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main message -->
+            <div class="relative z-10 my-auto max-w-[700px] pb-24 pt-12 sm:pt-14 lg:pb-20 lg:pt-12">
+                <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E9A52B] bg-white/70 px-4 py-2 text-sm font-semibold text-[#991126] shadow-sm backdrop-blur-sm">
+                    <span class="h-2.5 w-2.5 rounded-full bg-[#B51227]"></span>
+                    Unified Telecom Management
+                </div>
+
+                <h2 class="max-w-[700px] text-[2.45rem] font-extrabold leading-[1.08] tracking-[-0.045em] text-[#251C1D] sm:text-[2.8rem] xl:text-[3.15rem]">
+                    Everything connected.
+                    <span class="mt-1 block text-[#A10E20]">One platform.</span>
+                </h2>
+
+                <p class="mt-6 max-w-[650px] text-base leading-7 text-[#62575A] sm:text-[1.05rem]">
+                    Manage billing, monitor network infrastructure, and organize your inventory through one centralized operations platform.
+                </p>
+
+                <!-- Three feature highlights -->
+                <div class="mt-8 grid max-w-[690px] grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
+                    <div class="flex items-center gap-3 border-[#E7A52B] sm:border-r sm:pr-4">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m3 8 9-5 9 5-9 5-9-5Zm0 4 9 5 9-5M3 16l9 5 9-5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Billing</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Management</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-[#E7A52B] sm:border-r sm:pr-4">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 21V9m-5 12 5-12 5 12M6.5 7.5a7.8 7.8 0 0 1 11 0M3.5 4.5a12 12 0 0 1 17 0M10 5a3 3 0 0 1 4 0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Network</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Monitoring</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5m-9 5v8m-4.5-15.5 9 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Inventory</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Management</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smooth crimson footer with a gold curved ribbon -->
+            <svg class="wave-art" viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="goldWave" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FFF09A"/>
+                        <stop offset=".48" stop-color="#FFD43B"/>
+                        <stop offset="1" stop-color="#E9A900"/>
+                    </linearGradient>
+                    <linearGradient id="redWave" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#B5122A"/>
+                        <stop offset="1" stop-color="#870719"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0 34 C210 45 330 116 560 126 C735 134 875 78 1000 43 L1000 160 L0 160 Z" fill="url(#redWave)"/>
+                <path d="M0 25 C210 36 330 107 560 117 C735 125 875 69 1000 34"
+                      fill="none" stroke="url(#goldWave)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M0 39 C210 50 330 121 560 131 C735 139 875 83 1000 48"
+                      fill="none" stroke="#FFF1A8" stroke-width="3"/>
+            </svg>
+
+            <p class="relative z-10 mt-auto pb-4 text-[10px] text-white drop-shadow-sm">
+                © {% now "Y" %} TelecomOps. All rights reserved.
+            </p>
+        </section>
+
+        <!-- RIGHT: SIGN-IN FORM -->
+        <section class="flex min-h-screen items-center justify-center bg-white px-7 py-12 sm:px-12 lg:px-16 xl:px-20">
+            <div class="w-full max-w-[540px]">
+
+                <!-- Mobile brand -->
+                <div class="mb-12 flex items-center gap-3 lg:hidden">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#A10E20] text-white">
+                        <span class="text-lg font-bold">T</span>
+                    </div>
+                    <span class="text-xl font-extrabold text-[#21191A]">Telecom<span class="text-[#A10E20]">Ops</span></span>
+                </div>
+
+                <div class="mb-9">
+                    <p class="text-xs font-extrabold tracking-wide text-[#A10E20]">WELCOME BACK</p>
+                    <div class="mt-3 h-1.5 w-16 rounded-full bg-[#F2B51D]"></div>
+                    <h2 class="mt-4 text-[1.8rem] font-extrabold tracking-tight text-[#171313] sm:text-[2rem]">
+                        Sign in to your account
+                    </h2>
+                    <p class="mt-2 text-sm text-[#6F6265]">
+                        Enter your credentials to access your workspace.
+                    </p>
+                </div>
+
+                <!-- Django messages -->
+                {% if messages %}
+                <div class="mb-6 space-y-3" role="status" aria-live="polite">
+                    {% for message in messages %}
+                        {% if 'warning' in message.tags %}
+                            <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                                {{ message }}
+                            </div>
+                        {% elif 'success' in message.tags %}
+                            <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="POST" class="space-y-5">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Username
+                        </label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#51494B]" aria-hidden="true">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="8" r="3.5" stroke-width="1.8"/>
+                                    <path d="M5 20v-1.5a7 7 0 0 1 14 0V20" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <input
+                                id="username"
+                                type="text"
+                                name="username"
+                                required
+                                autocomplete="username"
+                                placeholder="Enter your username"
+                                value="{{ request.POST.username|default:'' }}"
+                                class="w-full rounded-xl border border-[#E7DDDE] bg-white py-3.5 pl-12 pr-5 text-sm text-[#241B1C] shadow-[0_2px_5px_rgba(45,20,25,0.09)] outline-none transition placeholder:text-[#9A9092] focus:border-[#A10E20] focus:ring-4 focus:ring-[#A10E20]/[0.08]"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#51494B]" aria-hidden="true">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect x="4.5" y="10" width="15" height="11" rx="2" stroke-width="1.8"/>
+                                    <path d="M8 10V7a4 4 0 1 1 8 0v3m-4 4v3" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                                placeholder="Enter your password"
+                                class="w-full rounded-xl border border-[#E7DDDE] bg-white py-3.5 pl-12 pr-14 text-sm text-[#241B1C] shadow-[0_2px_5px_rgba(45,20,25,0.09)] outline-none transition placeholder:text-[#9A9092] focus:border-[#A10E20] focus:ring-4 focus:ring-[#A10E20]/[0.08]"
+                            >
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="absolute inset-y-0 right-4 flex items-center gap-2 border-l border-[#E7DDDE] pl-4 text-[#5E5557] transition hover:text-[#A10E20]"
+                                aria-label="Show password"
+                                aria-pressed="false"
+                            >
+                                <svg id="eyeIcon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke-width="1.8"/>
+                                    <circle cx="12" cy="12" r="2.5" stroke-width="1.8"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mt-3 text-right">
+                            <a href="{% url 'forgot_password' %}" class="text-sm font-semibold text-[#B51227] transition hover:text-[#79091A]">
+                                Forgot Password?
+                            </a>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="flex w-full items-center justify-center gap-4 rounded-xl border-2 border-[#E9AD19] bg-gradient-to-r from-[#A9001B] via-[#B50924] to-[#920018] py-3.5 text-base font-bold text-white shadow-[0_7px_15px_rgba(153,17,38,0.18)] transition duration-200 hover:brightness-110 active:scale-[0.99]"
+                    >
+                        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M13 5h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-6M10 8l4 4-4 4m4-4H3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="mt-9 border-t border-[#E9DDDE] pt-5">
+                    <p class="flex items-center justify-center gap-3 text-sm text-[#6F6265]">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                        Authorized personnel only
+                    </p>
+
+                    <p class="mt-6 text-center text-sm text-[#6F6265]">
+                        Don't have an account?
+                        <a href="{% url 'register' %}" class="font-bold text-[#A10E20] hover:text-[#79091A]">
+                            Register here
+                        </a>
+                    </p>
+
+                    <p class="mt-3 text-center text-sm text-[#6F6265]">
+                        Administrator?
+                        <a href="{% url 'admin_login' %}" class="font-bold text-[#A10E20] hover:text-[#79091A]">
+                            Admin Login
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (() => {
+            const passwordInput = document.getElementById("password");
+            const toggleButton = document.getElementById("togglePassword");
+
+            if (!passwordInput || !toggleButton) return;
+
+            toggleButton.addEventListener("click", () => {
+                const shouldShow = passwordInput.type === "password";
+                passwordInput.type = shouldShow ? "text" : "password";
+                toggleButton.setAttribute("aria-pressed", String(shouldShow));
+                toggleButton.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+            });
+        })();
+    </script>
+</body>
+</html>
