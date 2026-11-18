@@ -1,0 +1,549 @@
+
+{% extends "base.html" %}
+
+{% block title %}Categories | TelecomOps{% endblock %}
+{% block breadcrumb %}INVENTORY / CATEGORIES{% endblock %}
+{% block page_title %}Category Management{% endblock %}
+
+{% block content %}
+
+<div class="space-y-4">
+
+    <!-- MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="rounded-lg border px-3 py-2.5 text-xs
+                {% if message.tags == 'success' %}
+                    border-emerald-500/20 bg-emerald-500/10 text-emerald-400
+                {% else %}
+                    border-red-500/20 bg-red-500/10 text-red-400
+                {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- PAGE HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+            <h2 class="text-lg font-semibold text-white">
+                All Categories
+            </h2>
+
+            <p class="text-xs text-slate-400 mt-0.5">
+                Manage and monitor your registered inventory categories.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- STATISTICS -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Total Categories</p>
+
+            <h3 class="text-2xl font-bold text-white mt-1.5">
+                {{ total_categories|default:0 }}
+            </h3>
+
+            <p class="text-[10px] text-slate-500 mt-1">
+                All registered categories
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Active Categories</p>
+
+            <h3 class="text-2xl font-bold text-emerald-400 mt-1.5">
+                {{ active_categories|default:0 }}
+            </h3>
+
+            <p class="text-[10px] text-slate-500 mt-1">
+                Currently available categories
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Inactive Categories</p>
+
+            <h3 class="text-2xl font-bold text-red-400 mt-1.5">
+                {{ inactive_categories|default:0 }}
+            </h3>
+
+            <p class="text-[10px] text-slate-500 mt-1">
+                Deactivated category records
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH AND FILTERS -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+
+        <form method="GET"
+              class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+
+            <!-- CATEGORY SEARCH -->
+            <div class="lg:col-span-9">
+
+                <label class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                    Search Categories
+                </label>
+
+                <div class="relative">
+
+                    <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <circle cx="11" cy="11" r="7" stroke-width="2"/>
+                        <path stroke-linecap="round"
+                              stroke-width="2"
+                              d="m16 16 4 4"/>
+
+                    </svg>
+
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ search_query }}"
+                        placeholder="Search category name or description..."
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md pl-9 pr-28 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    >
+
+                    <button
+                        type="submit"
+                        class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded bg-blue-600 text-white text-[11px] font-semibold hover:bg-blue-500 transition">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS FILTER -->
+            <div class="lg:col-span-3">
+
+                <label class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                    Category Status
+                </label>
+
+                <select
+                    name="status"
+                    onchange="this.form.submit()"
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+
+                    <option value=""
+                        {% if not selected_status %}selected{% endif %}>
+                        All Statuses
+                    </option>
+
+                    <option value="active"
+                        {% if selected_status == 'active' %}selected{% endif %}>
+                        Active
+                    </option>
+
+                    <option value="inactive"
+                        {% if selected_status == 'inactive' %}selected{% endif %}>
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- FORM ACTIONS -->
+            <div class="lg:col-span-12 flex flex-wrap justify-end gap-2">
+
+                <!-- INACTIVE CATEGORIES -->
+                <a href="{% url 'inventory:categories' %}?status=inactive"
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-400 text-xs font-semibold hover:bg-amber-500/20 transition">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+
+                    Inactive Categories
+
+                </a>
+
+
+                <!-- ACTIVE CATEGORIES -->
+                <a href="{% url 'inventory:categories' %}?status=active"
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+
+                    Active Categories
+
+                </a>
+
+
+                <!-- ADD CATEGORY -->
+                <a href="{% url 'inventory:add_category' %}"
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition">
+
+                    <svg class="w-3.5 h-3.5"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 5v14m-7-7h14"/>
+
+                    </svg>
+
+                    Add Category
+
+                </a>
+
+
+                <!-- RESET -->
+                <a href="{% url 'inventory:categories' %}?status="
+                   class="px-3 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- CATEGORY DIRECTORY -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+
+        <!-- TABLE HEADER -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-b border-slate-800">
+
+            <div>
+
+                <h3 class="text-sm font-semibold text-white">
+                    Category Records
+                </h3>
+
+                <p class="text-[10px] text-slate-400 mt-0.5">
+
+                    {% if page_obj.paginator.count %}
+
+                        Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                        of {{ page_obj.paginator.count }} categories
+
+                    {% else %}
+
+                        No category records found
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+            <span class="text-[10px] text-slate-500">
+
+                {{ page_obj.paginator.num_pages }}
+                page{{ page_obj.paginator.num_pages|pluralize }}
+
+            </span>
+
+        </div>
+
+
+        <!-- CATEGORY TABLE -->
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-xs text-left whitespace-nowrap">
+
+                <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/50">
+
+                    <tr>
+
+                        <th class="px-4 py-2.5 font-semibold">
+                            Category
+                        </th>
+
+                        <th class="px-4 py-2.5 font-semibold">
+                            Description
+                        </th>
+
+                        <th class="px-4 py-2.5 font-semibold">
+                            Products
+                        </th>
+
+                        <th class="px-4 py-2.5 font-semibold">
+                            Status
+                        </th>
+
+                        <th class="px-4 py-2.5 font-semibold text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-800">
+
+                    {% for category in categories %}
+
+                    <tr class="{% cycle 'bg-[#111c30]' 'bg-[#0e192b]' %} hover:bg-slate-800/60 transition">
+
+
+                        <!-- CATEGORY -->
+                        <td class="px-4 py-3">
+
+                            {% if category.parent %}
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-500">↳</span>
+
+                                    <div>
+                                        <span class="text-slate-300 font-medium">
+                                            {{ category.name }}
+                                        </span>
+
+                                        <p class="text-[10px] text-slate-500 mt-0.5">
+                                            Subcategory of {{ category.parent.name }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <span class="text-white font-semibold">
+                                    {{ category.name }}
+                                </span>
+
+                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                    Main Category · ID: {{ category.id }}
+                                </p>
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- DESCRIPTION -->
+                        <td class="px-4 py-3 text-slate-400">
+
+                            {% if category.description %}
+                                <span class="max-w-xs truncate inline-block align-middle">
+                                    {{ category.description }}
+                                </span>
+                            {% else %}
+                                <span class="text-slate-500 italic">No description</span>
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- PRODUCTS -->
+                        <td class="px-4 py-3 text-slate-300">
+
+                            {{ category.total_products|default:0 }}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+                        <td class="px-4 py-3">
+
+                            {% if category.is_active %}
+
+                                <span class="inline-flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">
+
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="inline-flex items-center gap-1.5 text-[10px] text-red-400 bg-red-500/10 px-2 py-1 rounded">
+
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+                        <td class="px-4 py-3">
+
+                            <div class="flex items-center justify-end gap-2">
+
+                                <a href="{% url 'inventory:edit_category' category.pk %}"
+                                   class="w-16 inline-flex items-center justify-center px-2 py-2 rounded-md border border-blue-500/20 bg-blue-500/10 text-blue-400 text-[10px] hover:bg-blue-500/20 transition">
+
+                                    Edit
+
+                                </a>
+
+
+                                {% if category.is_active %}
+
+                                    <form method="POST"
+                                          action="{% url 'inventory:toggle_category_status' category.pk %}"
+                                          onsubmit="return confirm('Are you sure you want to deactivate {{ category.name|escapejs }}?');">
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="w-[88px] inline-flex items-center justify-center px-2 py-2 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-400 text-[10px] hover:bg-amber-500/20 transition">
+
+                                            Deactivate
+
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <form method="POST"
+                                          action="{% url 'inventory:toggle_category_status' category.pk %}"
+                                          onsubmit="return confirm('Are you sure you want to activate {{ category.name|escapejs }}?');">
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="w-[88px] inline-flex items-center justify-center px-2 py-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] hover:bg-emerald-500/20 transition">
+
+                                            Activate
+
+                                        </button>
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="px-4 py-12 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <p class="text-xs text-white font-medium">
+                                    No categories found
+                                </p>
+
+                                <p class="text-[10px] text-slate-500 mt-1">
+                                    Try changing your search or filters.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- PAGINATION -->
+        {% if page_obj.paginator.num_pages > 1 %}
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-800">
+
+            <p class="text-[10px] text-slate-500">
+
+                Page {{ page_obj.number }}
+                of {{ page_obj.paginator.num_pages }}
+
+            </p>
+
+
+            <div class="flex items-center gap-1.5">
+
+
+                <!-- PREVIOUS -->
+                {% if page_obj.has_previous %}
+
+                    <a href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.previous_page_number }}"
+                       class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+
+                        Previous
+
+                    </a>
+
+                {% else %}
+
+                    <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+
+                        Previous
+
+                    </span>
+
+                {% endif %}
+
+
+                <!-- CURRENT PAGE -->
+                <span class="px-3 py-1.5 rounded-md bg-blue-600/15 border border-blue-500/20 text-blue-400 text-[10px]">
+
+                    {{ page_obj.number }}
+
+                </span>
+
+
+                <!-- NEXT -->
+                {% if page_obj.has_next %}
+
+                    <a href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.next_page_number }}"
+                       class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+
+                        Next
+
+                    </a>
+
+                {% else %}
+
+                    <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+
+                        Next
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

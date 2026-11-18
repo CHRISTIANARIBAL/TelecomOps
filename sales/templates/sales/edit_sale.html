@@ -1,0 +1,260 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit {{ sale.sale_number }} | TelecomOps{% endblock %}
+{% block breadcrumb %}SALES / EDIT TRANSACTION{% endblock %}
+{% block page_title %}Edit Transaction{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto space-y-5">
+
+    <!-- HEADER -->
+    <div>
+        <h3 class="text-xl font-bold text-white">
+            Edit {{ sale.sale_number }}
+        </h3>
+        <p class="text-xs text-slate-500 mt-1">
+            Update buyer information and purchased product details.
+        </p>
+    </div>
+
+    <!-- TRANSACTION INFORMATION -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-5">
+        <h4 class="text-sm font-semibold text-white mb-4">
+            Transaction Information
+        </h4>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Transaction Number</p>
+                <p class="text-sm font-semibold text-blue-400 mt-1">
+                    {{ sale.sale_number }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Transaction Date</p>
+                <p class="text-sm text-slate-300 mt-1">
+                    {{ sale.sale_date|date:"M d, Y h:i A" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Status</p>
+                <p class="text-sm text-emerald-400 font-semibold mt-1">
+                    {{ sale.get_status_display }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PRODUCT INFORMATION -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-5">
+        <h4 class="text-sm font-semibold text-white mb-4">
+            Product Information
+        </h4>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Product Name</p>
+                <p class="text-sm font-semibold text-white mt-1">
+                    {{ product.name }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">SKU</p>
+                <p class="text-sm text-blue-400 mt-1">
+                    {{ product.sku }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- EDIT FORM -->
+    <form method="POST"
+          class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        {% csrf_token %}
+
+        <div class="p-5 border-b border-slate-800">
+            <h4 class="text-sm font-semibold text-white">
+                Editable Transaction Details
+            </h4>
+            <p class="text-xs text-slate-500 mt-1">
+                Changes to quantity will automatically adjust inventory.
+            </p>
+        </div>
+
+        <div class="p-5 space-y-5">
+
+            {% if form.non_field_errors %}
+                <div class="p-3 rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 text-xs">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- CUSTOMER -->
+            <div>
+                <label for="{{ form.customer.id_for_label }}"
+                       class="block text-xs font-medium text-slate-300 mb-2">
+                    Registered Customer
+                </label>
+
+                <select name="{{ form.customer.html_name }}"
+                        id="{{ form.customer.id_for_label }}"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none">
+
+                    <option value="">Walk-in / Unregistered Customer</option>
+
+                    {% for customer in form.customer.field.queryset %}
+                        <option value="{{ customer.pk }}"
+                            {% if form.customer.value|stringformat:"s" == customer.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ customer.customer_id }} -
+                            {% if customer.company_name %}
+                                {{ customer.company_name }}
+                            {% else %}
+                                {{ customer.first_name }} {{ customer.last_name }}
+                            {% endif %}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                {% for error in form.customer.errors %}
+                    <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- BUYER NAME -->
+            <div>
+                <label for="{{ form.buyer_name.id_for_label }}"
+                       class="block text-xs font-medium text-slate-300 mb-2">
+                    Buyer Name
+                </label>
+
+                <input type="text"
+                       name="{{ form.buyer_name.html_name }}"
+                       id="{{ form.buyer_name.id_for_label }}"
+                       value="{{ form.buyer_name.value|default:'' }}"
+                       maxlength="200"
+                       class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none">
+
+                {% for error in form.buyer_name.errors %}
+                    <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- QUANTITY AND PRICE -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div>
+                    <label for="{{ form.quantity.id_for_label }}"
+                           class="block text-xs font-medium text-slate-300 mb-2">
+                        Quantity
+                    </label>
+
+                    <input type="number"
+                           name="{{ form.quantity.html_name }}"
+                           id="{{ form.quantity.id_for_label }}"
+                           value="{{ form.quantity.value|default:1 }}"
+                           min="1"
+                           required
+                           class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.quantity.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label for="{{ form.unit_price.id_for_label }}"
+                           class="block text-xs font-medium text-slate-300 mb-2">
+                        Unit Selling Price (₱)
+                    </label>
+
+                    <input type="number"
+                           name="{{ form.unit_price.html_name }}"
+                           id="{{ form.unit_price.id_for_label }}"
+                           value="{{ form.unit_price.value|default:'' }}"
+                           min="0"
+                           step="0.01"
+                           required
+                           class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.unit_price.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- NOTES -->
+            <div>
+                <label for="{{ form.notes.id_for_label }}"
+                       class="block text-xs font-medium text-slate-300 mb-2">
+                    Transaction Notes
+                </label>
+
+                <textarea name="{{ form.notes.html_name }}"
+                          id="{{ form.notes.id_for_label }}"
+                          rows="3"
+                          class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none">{{ form.notes.value|default:'' }}</textarea>
+
+                {% for error in form.notes.errors %}
+                    <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <!-- FORM ACTIONS -->
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 p-5 border-t border-slate-800">
+
+            <a href="{% url 'sales:sale_detail' sale.pk %}"
+               class="px-4 py-2.5 rounded-md border border-slate-700 text-slate-300 text-xs text-center hover:bg-slate-800 transition">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="px-4 py-2.5 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                Save Transaction Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const customerSelect = document.getElementById("id_customer");
+    const buyerName = document.getElementById("id_buyer_name");
+
+    if (!customerSelect || !buyerName) return;
+
+    customerSelect.addEventListener("change", function () {
+        if (!this.value) {
+            buyerName.value = "";
+            return;
+        }
+
+        const selectedText = this.options[this.selectedIndex].text;
+
+        buyerName.value = selectedText
+            .replace(/^CUS-\d+\s*-\s*/, "")
+            .trim();
+    });
+});
+</script>
+{% endblock %}

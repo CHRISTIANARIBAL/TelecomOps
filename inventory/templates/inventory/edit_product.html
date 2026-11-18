@@ -1,0 +1,673 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit Product | TelecomOps{% endblock %}
+{% block breadcrumb %}INVENTORY / PRODUCTS / EDIT PRODUCT{% endblock %}
+{% block page_title %}Edit Product{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto space-y-5">
+
+    <!-- HEADER -->
+    <div>
+        <h2 class="text-lg font-semibold text-white">Update Product</h2>
+        <p class="text-xs text-slate-400 mt-1">
+            Modify the information for {{ product.name }}.
+        </p>
+    </div>
+
+    <!-- FORM ERRORS -->
+    {% if form.errors %}
+    <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+        <p class="text-xs font-semibold text-red-400 mb-2">
+            Please correct the following errors:
+        </p>
+
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p class="text-xs text-red-400">
+                    {{ field.label }}: {{ error }}
+                </p>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+            <p class="text-xs text-red-400">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="rounded-lg border px-3 py-2 text-xs
+            {% if message.tags == 'success' %}
+                border-emerald-500/20 bg-emerald-500/10 text-emerald-400
+            {% else %}
+                border-red-500/20 bg-red-500/10 text-red-400
+            {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- PRODUCT INFORMATION -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Product Information
+                </h3>
+                <p class="text-[10px] text-slate-400 mt-1">
+                    Update identification and classification.
+                </p>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- SKU -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Product SKU <span class="text-red-400">*</span>
+                    </label>
+
+                    <input type="text" name="sku"
+                        value="{{ form.sku.value|default:'' }}"
+                        required maxlength="50"
+                        placeholder="Enter product SKU"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.sku.errors %}
+                    <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <!-- PRODUCT NAME -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Product Name <span class="text-red-400">*</span>
+                    </label>
+
+                    <input type="text" name="name"
+                        value="{{ form.name.value|default:'' }}"
+                        required maxlength="200"
+                        placeholder="Enter product name"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.name.errors %}
+                    <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                                
+                <!-- PRODUCT IMAGES -->
+                <div class="md:col-span-2">
+
+                    <label class="block text-xs text-slate-400 mb-2">
+                        Product Images
+                        <span class="text-slate-500">(Multiple Images)</span>
+                    </label>
+
+                    <!-- EXISTING GALLERY IMAGES -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+
+                        {% for product_image in product.images.all %}
+                            <div class="bg-[#080d19] border border-slate-700 rounded-lg p-2">
+
+                                <img
+                                    src="{{ product_image.image.url }}"
+                                    alt="{{ product.name }}"
+                                    class="w-full h-28 object-contain rounded"
+                                >
+
+                                <p class="text-[10px] text-slate-400 mt-2 truncate">
+                                    {% if product_image.is_primary %}
+                                        Primary Image
+                                    {% else %}
+                                        Product Image
+                                    {% endif %}
+                                </p>
+
+                            </div>
+                        {% endfor %}
+
+                        {% if product.image %}
+                            <div class="bg-[#080d19] border border-slate-700 rounded-lg p-2">
+                                <img
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.name }}"
+                                    class="w-full h-28 object-contain rounded"
+                                >
+                                <p class="text-[10px] text-slate-400 mt-2">
+                                    Legacy Product Image
+                                </p>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- UPLOAD ADDITIONAL IMAGES -->
+                    <input
+                        type="file"
+                        name="images"
+                        id="productImagesInput"
+                        accept="image/*"
+                        multiple
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-slate-300 file:bg-blue-600 file:text-white file:border-0 file:rounded file:px-3 file:py-1.5 file:mr-3"
+                    >
+
+                    <p class="text-[10px] text-slate-500 mt-2">
+                        Select multiple images to add to the existing product gallery.
+                        Existing images will be preserved.
+                    </p>
+
+                    <!-- NEW IMAGE PREVIEWS -->
+                    <div
+                        id="productImagePreviewContainer"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4"
+                    ></div>
+
+                </div>
+              
+                <!-- CATEGORY MODE -->
+                <div class="md:col-span-2">
+
+                    <label class="block text-xs text-slate-400 mb-2">
+                        Product Category <span class="text-red-400">*</span>
+                    </label>
+
+                    <div class="flex flex-wrap gap-4 mb-3">
+
+                        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                            <input type="radio" name="category_mode"
+                                value="existing" checked
+                                class="accent-blue-500">
+                            Select Existing Category
+                        </label>
+
+                        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                            <input type="radio" name="category_mode"
+                                value="new"
+                                class="accent-blue-500">
+                            Create New Category
+                        </label>
+
+                    </div>
+
+                    <!-- EXISTING CATEGORY -->
+                    <div id="existingCategory" class="space-y-3">
+
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1.5">
+                                Main Category
+                            </label>
+
+                            <select name="category"
+                                    id="categorySelect"
+                                    class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                                <option value="">Select a main category</option>
+
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}"
+                                        {% if form.category.value|stringformat:"s" == category.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+
+                            </select>
+
+                            {% for error in form.category.errors %}
+                                <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- OPTIONAL SUBCATEGORY -->
+                        <div id="subcategoryField" class="hidden">
+
+                            <label class="block text-[11px] text-slate-400 mb-1.5">
+                                Subcategory <span class="text-slate-500">(Optional)</span>
+                            </label>
+
+                            <select name="subcategory"
+                                    id="subcategorySelect"
+                                    {% if not form.category.value %}disabled{% endif %}
+                                    class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed">
+
+                                <option value="">No subcategory</option>
+
+                                {% for subcategory in form.subcategory.field.queryset %}
+                                    <option value="{{ subcategory.id }}"
+                                        {% if form.subcategory.value|stringformat:"s" == subcategory.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ subcategory.name }}
+                                    </option>
+                                {% endfor %}
+
+                            </select>
+
+                            {% for error in form.subcategory.errors %}
+                                <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                            {% endfor %}
+
+                            <p class="text-[10px] text-slate-500 mt-1">
+                                Select a subcategory belonging to the chosen main category, or leave it blank.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- NEW MAIN CATEGORY -->
+                    <div id="newCategory" class="hidden space-y-3">
+
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1.5">
+                                New Main Category Name
+                            </label>
+
+                            <input type="text"
+                                name="new_category_name"
+                                value="{{ form.new_category_name.value|default:'' }}"
+                                maxlength="150"
+                                placeholder="Enter new main category name"
+                                class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                            {% for error in form.new_category_name.errors %}
+                                <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1.5">
+                                Category Description (Optional)
+                            </label>
+
+                            <textarea name="new_category_description"
+                                    rows="2"
+                                    placeholder="Describe this category..."
+                                    class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">{{ form.new_category_description.value|default:'' }}</textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TRACKING TYPE -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Tracking Type
+                    </label>
+
+                    <select name="tracking_type"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                        {% for value, label in form.fields.tracking_type.choices %}
+                        <option value="{{ value }}"
+                            {% if form.tracking_type.value == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <!-- UNIT -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Unit of Measure
+                    </label>
+
+                    <input type="text" name="unit_of_measure"
+                        value="{{ form.unit_of_measure.value|default:'pcs' }}"
+                        maxlength="30"
+                        placeholder="pcs, meters, boxes..."
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Product Description
+                    </label>
+
+                    <textarea name="description" rows="3"
+                        placeholder="Enter product description..."
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">{{ form.description.value|default:'' }}</textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PRICING INFORMATION -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Pricing Information
+                </h3>
+                <p class="text-[10px] text-slate-400 mt-1">
+                    Update the product's cost and selling price.
+                </p>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Cost Price (₱)
+                    </label>
+
+                    <input type="number" name="cost_price"
+                        value="{{ form.cost_price.value|default:'0.00' }}"
+                        min="0" step="0.01"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.cost_price.errors %}
+                    <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Selling Price (₱)
+                    </label>
+
+                    <input type="number" name="selling_price"
+                        value="{{ form.selling_price.value|default:'' }}"
+                        min="0" step="0.01"
+                        placeholder="Optional"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                    {% for error in form.selling_price.errors %}
+                    <p class="text-[10px] text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- STOCK SETTINGS -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Stock Settings
+                </h3>
+                <p class="text-[10px] text-slate-400 mt-1">
+                    Update the minimum stock threshold.
+                </p>
+            </div>
+
+            <div class="p-4">
+
+                <div class="max-w-md">
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Minimum Stock Level
+                    </label>
+
+                    <input type="number" name="minimum_stock"
+                        value="{{ form.minimum_stock.value|default:'0' }}"
+                        min="0" step="1"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                    <p class="text-[10px] text-slate-500 mt-1">
+                        Used to identify products requiring replenishment.
+                    </p>
+                </div>
+
+                <div class="mt-4 rounded-md border border-blue-500/20 bg-blue-500/5 p-3">
+                    <p class="text-[11px] text-blue-300 font-medium">
+                        Stock quantity is not editable here.
+                    </p>
+                    <p class="text-[10px] text-slate-400 mt-1">
+                        Use Stock Management to record stock additions, releases, and adjustments.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FORM BUTTONS -->
+        <div class="flex flex-wrap justify-end gap-2">
+
+            <a href="{% url 'inventory:products' %}"
+                class="px-4 py-2.5 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                Cancel
+            </a>
+
+            <button type="submit"
+                class="px-5 py-2.5 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                Update Product
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{{ subcategories|json_script:"subcategory-data" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const categoryModes = document.querySelectorAll(
+        'input[name="category_mode"]'
+    );
+
+    const existingCategory = document.getElementById("existingCategory");
+    const newCategory = document.getElementById("newCategory");
+
+    const categorySelect = document.getElementById("categorySelect");
+    const subcategorySelect = document.getElementById("subcategorySelect");
+    const subcategoryField = document.getElementById("subcategoryField");
+
+    const newCategoryInput = document.querySelector(
+        'input[name="new_category_name"]'
+    );
+
+    const subcategories = JSON.parse(
+        document.getElementById("subcategory-data").textContent
+    );
+
+    const initialSubcategory = "{{ form.subcategory.value|default:''|escapejs }}";
+
+    function updateSubcategories(preserveSelection = false) {
+
+        const selectedCategory = categorySelect.value;
+
+        const previousValue = preserveSelection
+            ? subcategorySelect.value
+            : "";
+
+        subcategorySelect.innerHTML = "";
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+
+        const availableSubcategories = subcategories.filter(
+            item => String(item.parent_id) === String(selectedCategory)
+        );
+
+        placeholder.textContent = availableSubcategories.length
+            ? "No subcategory (Optional)"
+            : "No subcategories available";
+
+        subcategorySelect.appendChild(placeholder);
+
+        availableSubcategories.forEach(function (item) {
+
+            const option = document.createElement("option");
+
+            option.value = item.id;
+            option.textContent = item.name;
+
+            if (String(item.id) === String(previousValue)) {
+                option.selected = true;
+            }
+
+            subcategorySelect.appendChild(option);
+
+        });
+
+        subcategorySelect.disabled =
+        !selectedCategory || availableSubcategories.length === 0;
+
+    subcategoryField.classList.toggle("hidden", !selectedCategory);
+    }
+
+
+    function updateCategoryMode() {
+
+        const selectedMode = document.querySelector(
+            'input[name="category_mode"]:checked'
+        ).value;
+
+        const isNew = selectedMode === "new";
+
+        existingCategory.classList.toggle("hidden", isNew);
+        newCategory.classList.toggle("hidden", !isNew);
+
+        categorySelect.disabled = isNew;
+        subcategorySelect.disabled =
+            !selectedCategory || availableSubcategories.length === 0;
+
+        newCategoryInput.required = isNew;
+        newCategoryInput.disabled = !isNew;
+
+    }
+
+
+    // Preserve new category mode after form validation errors.
+    if (newCategoryInput.value.trim()) {
+
+        document.querySelector(
+            'input[name="category_mode"][value="new"]'
+        ).checked = true;
+
+    }
+
+
+    // Initialize existing subcategories.
+    updateSubcategories(true);
+
+    // Restore selected subcategory after validation errors.
+    if (initialSubcategory) {
+        subcategorySelect.value = initialSubcategory;
+    }
+
+    // Update subcategories when the main category changes.
+    categorySelect.addEventListener("change", function () {
+        updateSubcategories(false);
+    });
+
+
+    // Handle existing/new category switching.
+    categoryModes.forEach(function (radio) {
+        radio.addEventListener("change", updateCategoryMode);
+    });
+
+    
+// MULTIPLE PRODUCT IMAGE PREVIEW
+const productImagesInput = document.getElementById("productImagesInput");
+const productImagePreviewContainer = document.getElementById(
+    "productImagePreviewContainer"
+);
+
+let selectedProductImages = [];
+
+productImagesInput.addEventListener("change", function () {
+
+    const newFiles = Array.from(this.files);
+
+    const invalidFile = newFiles.find(
+        file => !file.type.startsWith("image/")
+    );
+
+    if (invalidFile) {
+        alert("Please select valid image files only.");
+        this.value = "";
+        return;
+    }
+
+    selectedProductImages = [
+        ...selectedProductImages,
+        ...newFiles
+    ];
+
+    updateProductImagePreviews();
+});
+
+function updateProductImagePreviews() {
+
+    // Synchronize selected images with the actual file input.
+    const dataTransfer = new DataTransfer();
+
+    selectedProductImages.forEach(function (file) {
+        dataTransfer.items.add(file);
+    });
+
+    productImagesInput.files = dataTransfer.files;
+
+    productImagePreviewContainer.innerHTML = "";
+
+    selectedProductImages.forEach(function (file, index) {
+
+        const imageURL = URL.createObjectURL(file);
+
+        const wrapper = document.createElement("div");
+
+        wrapper.className =
+            "relative bg-[#080d19] border border-slate-700 rounded-lg p-2";
+
+        wrapper.innerHTML = `
+            <img
+                src="${imageURL}"
+                class="w-full h-28 object-contain rounded"
+                alt="Product preview"
+            >
+
+            <button
+                type="button"
+                class="remove-product-image absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 text-xs hover:bg-red-500"
+                data-index="${index}"
+                aria-label="Remove image"
+            >
+                &times;
+            </button>
+
+            <p class="text-[10px] text-slate-400 mt-2 truncate">
+                ${file.name}
+            </p>
+        `;
+
+        productImagePreviewContainer.appendChild(wrapper);
+    });
+}
+
+productImagePreviewContainer.addEventListener("click", function (event) {
+
+    const removeButton = event.target.closest(".remove-product-image");
+
+    if (!removeButton) return;
+
+    const index = Number(removeButton.dataset.index);
+
+    selectedProductImages.splice(index, 1);
+
+    updateProductImagePreviews();
+});
+
+
+    updateCategoryMode();
+
+});
+</script>
+
+
+{% endblock %}

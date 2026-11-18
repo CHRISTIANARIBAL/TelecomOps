@@ -1,0 +1,311 @@
+
+{% extends "base.html" %}
+
+{% block title %}Sales Records | TelecomOps{% endblock %}
+{% block breadcrumb %}SALES / TRANSACTIONS{% endblock %}
+{% block page_title %}Sales Records{% endblock %}
+
+{% block content %}
+
+<div class="space-y-5">
+
+    <!-- PAGE HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+            <h3 class="text-lg font-semibold text-white">Sales Transactions</h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Monitor all completed and voided product sales.
+            </p>
+        </div>
+
+        <div class="text-xs text-slate-400">
+            Total Records:
+            <span class="text-white font-semibold">{{ total_records }}</span>
+        </div>
+    </div>
+
+    <!-- SALES SEARCH AND FILTERS -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+
+        <form method="GET" class="space-y-3">
+
+            <!-- SEARCH -->
+            <div>
+                <label class="block text-xs text-slate-400 mb-1.5">
+                    Search Sales
+                </label>
+
+                <div class="flex gap-2">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ search_query }}"
+                        placeholder="Transaction number, buyer, product, SKU, or employee..."
+                        class="flex-1 min-w-0 bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    >
+
+                    <button
+                        type="submit"
+                        class="px-4 py-2.5 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+
+                <!-- STATUS -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Transaction Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+
+                        <option value="">All Statuses</option>
+
+                        <option value="COMPLETED"
+                            {% if selected_status == "COMPLETED" %}selected{% endif %}>
+                            Completed
+                        </option>
+
+                        <option value="VOID"
+                            {% if selected_status == "VOID" %}selected{% endif %}>
+                            Voided
+                        </option>
+                    </select>
+                </div>
+
+                <!-- RELEASED BY -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        Released By
+                    </label>
+
+                    <select
+                        name="employee"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+
+                        <option value="">All Employees</option>
+
+                        {% for employee in employees %}
+                            <option
+                                value="{{ employee.pk }}"
+                                {% if selected_employee == employee.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ employee.get_full_name|default:employee.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- DATE FROM -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        From Date
+                    </label>
+                    <input
+                        type="date"
+                        name="date_from"
+                        value="{{ date_from }}"
+                        style="color-scheme: dark;"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                    >
+                </div>
+
+                <!-- DATE TO -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date_to"
+                        value="{{ date_to }}"
+                        min="{{ date_from }}"
+                        style="color-scheme: dark;"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                    >
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex justify-end gap-2">
+
+                <a
+                    href="{% url 'sales:sales_list' %}"
+                    class="px-4 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                    Reset
+                </a>
+
+                <button
+                    type="submit"
+                    class="px-4 py-2 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                    Apply Filters
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+
+    <!-- SALES TABLE -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+
+                <thead class="bg-[#0c1424] text-slate-400 uppercase tracking-wider">
+                    <tr>
+                        <th class="px-4 py-3 font-semibold">Transaction</th>
+                        <th class="px-4 py-3 font-semibold">Buyer</th>
+                        <th class="px-4 py-3 font-semibold">Products Sold</th>
+                        <th class="px-4 py-3 font-semibold text-center">Items</th>
+                        <th class="px-4 py-3 font-semibold text-right">Total Amount</th>
+                        <th class="px-4 py-3 font-semibold">Processed By</th>
+                        <th class="px-4 py-3 font-semibold">Released By</th>
+                        <th class="px-4 py-3 font-semibold">Date</th>
+                        <th class="px-4 py-3 font-semibold text-center">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-800">
+
+                    {% for sale in sales %}
+                    <tr class="hover:bg-slate-800/40 transition">
+
+                        <td class="px-4 py-3 font-semibold">
+                            <a href="{% url 'sales:sale_detail' sale.pk %}"
+                            class="text-blue-400 hover:text-blue-300 hover:underline transition">
+                                {{ sale.sale_number }}
+                            </a>
+                        </td>
+
+                        <td class="px-4 py-3 text-slate-200">
+                            {{ sale.buyer_name }}
+                        </td>
+
+                        <td class="px-4 py-3 text-slate-300">
+                            <div class="space-y-1">
+                                {% for item in sale.items.all %}
+                                    <div>
+                                        {{ item.product.name }}
+                                        <span class="text-slate-500">
+                                            × {{ item.quantity }}
+                                        </span>
+                                    </div>
+                                {% empty %}
+                                    <span class="text-slate-500">No items</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+
+                        <td class="px-4 py-3 text-center text-slate-300">
+                            {{ sale.items.all|length }}
+                        </td>
+
+                        <td class="px-4 py-3 text-right font-semibold text-emerald-400">
+                            ₱{{ sale.total_amount|floatformat:2 }}
+                        </td>
+
+                        <td class="px-4 py-3 text-slate-300">
+                            {{ sale.processed_by.username|default:"—" }}
+                        </td>
+                        
+                        <td class="px-4 py-3 text-slate-300">
+                            {% if sale.released_by %}
+                                {{ sale.released_by.get_full_name|default:sale.released_by.username }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+
+                        <td class="px-4 py-3 text-slate-400">
+                            {{ sale.sale_date|date:"M d, Y h:i A" }}
+                        </td>
+
+                        <td class="px-4 py-3 text-center">
+                            {% if sale.status == "COMPLETED" %}
+                                <span class="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold">
+                                    COMPLETED
+                                </span>
+                            {% else %}
+                                <span class="px-2 py-1 rounded-md bg-red-500/10 text-red-400 text-[10px] font-semibold">
+                                    VOID
+                                </span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="px-4 py-12 text-center">
+                            <div class="text-slate-500">
+                                <p class="text-sm font-medium text-slate-300">
+                                    No sales transactions yet
+                                </p>
+                                <p class="text-xs mt-1">
+                                    Completed product sales will appear here.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- PAGINATION -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-800">
+
+            <p class="text-[10px] text-slate-400">
+                Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                of {{ total_records }} transactions
+            </p>
+
+            <div class="flex items-center gap-1.5">
+
+                {% if page_obj.has_previous %}
+                    <a
+                        href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&employee={{ selected_employee|urlencode }}&date_from={{ date_from|urlencode }}&date_to={{ date_to|urlencode }}&page={{ page_obj.previous_page_number }}"
+                        class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+                        Previous
+                    </span>
+                {% endif %}
+
+                <span class="px-3 py-1.5 rounded-md bg-blue-600/15 border border-blue-500/20 text-blue-400 text-[10px]">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a
+                        href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&employee={{ selected_employee|urlencode }}&date_from={{ date_from|urlencode }}&date_to={{ date_to|urlencode }}&page={{ page_obj.next_page_number }}"
+                        class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+                        Next
+                    </span>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

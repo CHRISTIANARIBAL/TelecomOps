@@ -1,0 +1,316 @@
+
+{% extends "base.html" %}
+
+{% block title %}Billing Dashboard | TelecomOps{% endblock %}
+{% block breadcrumb %}BILLING / OVERVIEW{% endblock %}
+{% block page_title %}Billing Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+
+    <!-- Dashboard Introduction -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+            <h2 class="text-lg font-semibold text-white">Billing Overview</h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+                Monitor customers, subscriptions, collections, and outstanding balances.
+            </p>
+        </div>
+
+        <div class="inline-flex items-center gap-2 w-fit text-[10px] text-slate-400 bg-slate-800/70 border border-slate-700 rounded-md px-2.5 py-1.5">
+            <span class="text-emerald-400">●</span>
+            Live database statistics
+        </div>
+    </div>
+
+    <!-- Main KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+
+        <!-- Total Customers -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-slate-400">Total Customers</p>
+                <span class="text-blue-400 text-base">♙</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mt-2">
+                {{ total_customers }}
+            </h3>
+            <p class="text-[10px] text-emerald-400 mt-1">
+                {{ active_customers }} active customers
+            </p>
+        </div>
+
+        <!-- Active Subscriptions -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-slate-400">Active Subscriptions</p>
+                <span class="text-emerald-400 text-base">◉</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mt-2">
+                {{ active_subscriptions }}
+            </h3>
+            <p class="text-[10px] text-slate-400 mt-1">
+                {{ total_subscriptions }} total subscriptions
+            </p>
+        </div>
+
+        <!-- Monthly Collections -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-slate-400">Monthly Collections</p>
+                <span class="text-emerald-400 text-base">₱</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mt-2">
+                ₱{{ monthly_collections|floatformat:2 }}
+            </h3>
+            <p class="text-[10px] text-slate-400 mt-1">
+                Completed payments this month
+            </p>
+        </div>
+
+        <!-- Outstanding Balance -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-slate-400">Outstanding Balance</p>
+                <span class="text-amber-400 text-base">₱</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mt-2">
+                ₱{{ outstanding_balance|floatformat:2 }}
+            </h3>
+            <p class="text-[10px] text-amber-400 mt-1">
+                Unpaid and partially paid invoices
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Secondary Statistics -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
+            <p class="text-[11px] text-slate-400">Suspended Subscriptions</p>
+            <p class="text-xl font-semibold text-red-400 mt-1">
+                {{ suspended_subscriptions }}
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
+            <p class="text-[11px] text-slate-400">Pending Subscriptions</p>
+            <p class="text-xl font-semibold text-amber-400 mt-1">
+                {{ pending_subscriptions }}
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
+            <p class="text-[11px] text-slate-400">Overdue Invoices</p>
+            <p class="text-xl font-semibold text-red-400 mt-1">
+                {{ overdue_invoices }}
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
+            <p class="text-[11px] text-slate-400">Unpaid Invoices</p>
+            <p class="text-xl font-semibold text-amber-400 mt-1">
+                {{ unpaid_invoices }}
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+
+        <!-- Recent Payments -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="flex justify-between items-center px-4 py-3 border-b border-slate-800">
+                <div>
+                    <h3 class="text-sm font-semibold text-white">Recent Payments</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        Latest customer transactions
+                    </p>
+                </div>
+                <span class="text-[10px] text-slate-500">Last 5 records</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left">
+
+                    <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/40">
+                        <tr>
+                            <th class="px-4 py-2.5">Payment</th>
+                            <th class="px-4 py-2.5">Customer</th>
+                            <th class="px-4 py-2.5">Amount</th>
+                            <th class="px-4 py-2.5">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-800">
+
+                        {% for payment in recent_payments %}
+                        <tr class="hover:bg-slate-800/40 transition">
+
+                            <td class="px-4 py-3 text-white font-medium">
+                                {{ payment.payment_number }}
+                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                    {{ payment.payment_date|date:"M d, Y" }}
+                                </p>
+                            </td>
+
+                            <td class="px-4 py-3 text-slate-300">
+                                {{ payment.customer }}
+                            </td>
+
+                            <td class="px-4 py-3 text-white font-medium whitespace-nowrap">
+                                ₱{{ payment.amount|floatformat:2 }}
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <span class="text-[10px] px-2 py-1 rounded
+                                    {% if payment.status == 'COMPLETED' %}bg-emerald-500/10 text-emerald-400
+                                    {% elif payment.status == 'PENDING' %}bg-amber-500/10 text-amber-400
+                                    {% elif payment.status == 'REVERSED' or payment.status == 'FAILED' %}bg-red-500/10 text-red-400
+                                    {% else %}bg-slate-700 text-slate-300{% endif %}">
+                                    {{ payment.get_status_display }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-8 text-center text-slate-500 text-xs">
+                                No payment records available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Invoices -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="flex justify-between items-center px-4 py-3 border-b border-slate-800">
+                <div>
+                    <h3 class="text-sm font-semibold text-white">Recent Invoices</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        Latest generated invoices
+                    </p>
+                </div>
+                <span class="text-[10px] text-slate-500">Last 5 records</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left">
+
+                    <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/40">
+                        <tr>
+                            <th class="px-4 py-2.5">Invoice</th>
+                            <th class="px-4 py-2.5">Customer</th>
+                            <th class="px-4 py-2.5">Total</th>
+                            <th class="px-4 py-2.5">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-800">
+
+                        {% for invoice in recent_invoices %}
+                        <tr class="hover:bg-slate-800/40 transition">
+
+                            <td class="px-4 py-3 text-white font-medium">
+                                {{ invoice.invoice_number }}
+                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                    Due {{ invoice.due_date|date:"M d, Y" }}
+                                </p>
+                            </td>
+
+                            <td class="px-4 py-3 text-slate-300">
+                                {{ invoice.customer }}
+                            </td>
+
+                            <td class="px-4 py-3 text-white font-medium whitespace-nowrap">
+                                ₱{{ invoice.total_amount|floatformat:2 }}
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <span class="text-[10px] px-2 py-1 rounded
+                                    {% if invoice.status == 'PAID' %}bg-emerald-500/10 text-emerald-400
+                                    {% elif invoice.status == 'OVERDUE' or invoice.status == 'VOID' %}bg-red-500/10 text-red-400
+                                    {% elif invoice.status == 'DRAFT' %}bg-slate-700 text-slate-300
+                                    {% else %}bg-amber-500/10 text-amber-400{% endif %}">
+                                    {{ invoice.get_status_display }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-8 text-center text-slate-500 text-xs">
+                                No invoice records available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Billing Activities -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <div class="px-4 py-3 border-b border-slate-800">
+            <h3 class="text-sm font-semibold text-white">
+                Recent Billing Activities
+            </h3>
+            <p class="text-[10px] text-slate-400 mt-0.5">
+                Latest recorded billing operations
+            </p>
+        </div>
+
+        <div class="divide-y divide-slate-800">
+
+            {% for activity in recent_activities %}
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 px-4 py-3 hover:bg-slate-800/30">
+
+                <div>
+                    <p class="text-xs text-white font-medium">
+                        {{ activity.get_action_display }}
+                    </p>
+
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        {% if activity.customer %}
+                            {{ activity.customer }}
+                        {% else %}
+                            System activity
+                        {% endif %}
+
+                        {% if activity.user %}
+                            · By {{ activity.user.username }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <p class="text-[10px] text-slate-500">
+                    {{ activity.created_at|date:"M d, Y · h:i A" }}
+                </p>
+
+            </div>
+
+            {% empty %}
+            <div class="px-4 py-8 text-center text-slate-500 text-xs">
+                No billing activities recorded yet.
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

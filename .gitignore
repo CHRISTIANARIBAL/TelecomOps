@@ -1,0 +1,66 @@
+
+# ==========================================
+# ENVIRONMENT VARIABLES AND SECRETS
+# ==========================================
+.env
+.env.*
+!.env.example
+cred.txt
+credentials.txt
+
+# ==========================================
+# PYTHON
+# ==========================================
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# ==========================================
+# DJANGO
+# ==========================================
+db.sqlite3
+db.sqlite3-journal
+media/
+.static/
+
+# ==========================================
+# NODE.JS
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ==========================================
+# GENERATED AND TEMPORARY FILES
+# ==========================================
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# GIT RECOVERY AND DIAGNOSTICS
+# ==========================================
+.git-backup-before-recovery/
+blob-sizes.txt
+dangling-blobs.txt
+
+# ==========================================
+# TESTING AND COVERAGE
+# ==========================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ==========================================
+# IDE
+# ==========================================
+.vscode/
+.idea/

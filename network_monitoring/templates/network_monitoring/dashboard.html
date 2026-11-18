@@ -1,0 +1,78 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | TelecomOps{% endblock %}
+
+{% block breadcrumb %}WORKSPACE / OVERVIEW{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="space-y-4">
+
+    <!-- PAGE INTRO -->
+    <div>
+        <h1 class="text-lg font-bold tracking-tight">
+            Welcome back, {{ request.user.username }}.
+        </h1>
+
+        <p class="text-xs text-slate-500 mt-1">
+            Here's your centralized operations workspace.
+        </p>
+    </div>
+
+    <!-- DASHBOARD EMPTY STATE -->
+    <section class="min-h-[300px] flex items-center justify-center
+                    rounded-xl border border-dashed border-slate-700
+                    bg-[#0c1424]/50 p-5">
+
+        <div class="max-w-sm text-center">
+
+            <!-- ICON -->
+            <div class="mx-auto h-14 w-14 rounded-xl
+                        bg-blue-500/10 border border-blue-500/20
+                        flex items-center justify-center">
+
+                <svg class="w-7 h-7 text-blue-400"
+                     fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24">
+
+                    <rect x="3" y="3" width="8" height="8" rx="2"/>
+                    <rect x="13" y="3" width="8" height="8" rx="2"/>
+                    <rect x="13" y="13" width="8" height="8" rx="2"/>
+                    <rect x="3" y="13" width="8" height="8" rx="2"/>
+
+                </svg>
+
+            </div>
+
+            <!-- MESSAGE -->
+            <h3 class="text-base font-semibold mt-4">
+                Your workspace is ready
+            </h3>
+
+            <p class="text-xs text-slate-500 leading-5 mt-2">
+                Your dashboard is ready for network monitoring
+                integration. Device status, network activities,
+                and system information will appear here as we
+                develop the module.
+            </p>
+
+            <!-- STATUS -->
+            <div class="mt-4 flex items-center justify-center gap-2
+                        text-[10px] text-slate-500">
+
+                <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+
+                Network module initialized
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

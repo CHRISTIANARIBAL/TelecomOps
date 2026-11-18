@@ -1,0 +1,204 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ sale.sale_number }} | TelecomOps{% endblock %}
+{% block breadcrumb %}SALES / TRANSACTION DETAILS{% endblock %}
+{% block page_title %}Transaction Details{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto space-y-5">
+
+    <!-- HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+            <h3 class="text-xl font-bold text-white">{{ sale.sale_number }}</h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Transaction information and purchased products.
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <a href="{% url 'sales:sales_list' %}"
+               class="px-4 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                Back to Sales
+                {% if sale.status == "COMPLETED" %}
+                    <a href="{% url 'sales:edit_sale' sale.pk %}"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                        Edit Transaction
+                    </a>
+                {% endif %}
+            </a>
+
+            {% if sale.status == "COMPLETED" %}
+                <span class="px-3 py-2 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-semibold">
+                    COMPLETED
+                </span>
+            {% else %}
+                <span class="px-3 py-2 rounded-md bg-red-500/10 text-red-400 text-xs font-semibold">
+                    VOID
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- TRANSACTION INFORMATION -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-slate-800">
+            <h4 class="font-semibold text-white">Transaction Information</h4>
+            <p class="text-xs text-slate-500 mt-1">General transaction details.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-5">
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Transaction Number</p>
+                <p class="font-semibold text-blue-400 mt-1">{{ sale.sale_number }}</p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Transaction Date</p>
+                <p class="text-slate-200 mt-1">{{ sale.sale_date|date:"M d, Y h:i A" }}</p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Processed By</p>
+                <p class="text-slate-200 mt-1">
+                    {{ sale.processed_by.username|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Released By</p>
+                <p class="text-slate-200 mt-1">
+                    {% if sale.released_by %}
+                        {{ sale.released_by.get_full_name|default:sale.released_by.username }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Buyer Name</p>
+                <p class="text-slate-200 mt-1">{{ sale.buyer_name }}</p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Customer Type</p>
+                <p class="text-slate-200 mt-1">
+                    {% if sale.customer %}
+                        Registered Customer
+                    {% else %}
+                        Walk-in Customer
+                    {% endif %}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Status</p>
+                <p class="text-slate-200 mt-1">{{ sale.get_status_display }}</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PURCHASED PRODUCTS -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-slate-800">
+            <h4 class="font-semibold text-white">Purchased Products</h4>
+            <p class="text-xs text-slate-500 mt-1">Products included in this transaction.</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs whitespace-nowrap">
+
+                <thead class="bg-[#0c1424] text-slate-400 uppercase">
+                    <tr>
+                        <th class="px-5 py-3">Product</th>
+                        <th class="px-5 py-3">SKU</th>
+                        <th class="px-5 py-3 text-center">Quantity</th>
+                        <th class="px-5 py-3 text-right">Unit Price</th>
+                        <th class="px-5 py-3 text-right">Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-800">
+
+                    {% for item in sale.items.all %}
+                    <tr class="hover:bg-slate-800/30">
+
+                        <td class="px-5 py-4 font-medium text-slate-200">
+                            {{ item.product.name }}
+                        </td>
+
+                        <td class="px-5 py-4 text-blue-400">
+                            {{ item.product.sku }}
+                        </td>
+
+                        <td class="px-5 py-4 text-center text-slate-300">
+                            {{ item.quantity }}
+                        </td>
+
+                        <td class="px-5 py-4 text-right text-slate-300">
+                            ₱{{ item.unit_price|floatformat:2 }}
+                        </td>
+
+                        <td class="px-5 py-4 text-right font-semibold text-slate-200">
+                            ₱{{ item.amount|floatformat:2 }}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-5 py-8 text-center text-slate-500">
+                            No products recorded.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TOTALS -->
+        <div class="border-t border-slate-800 p-5">
+            <div class="max-w-xs ml-auto space-y-3">
+
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Subtotal</span>
+                    <span class="text-slate-200">₱{{ sale.subtotal|floatformat:2 }}</span>
+                </div>
+
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Discount</span>
+                    <span class="text-slate-200">₱{{ sale.discount|floatformat:2 }}</span>
+                </div>
+
+                <div class="border-t border-slate-700 pt-3 flex justify-between items-center">
+                    <span class="font-semibold text-white">Total Amount</span>
+                    <span class="text-xl font-bold text-emerald-400">
+                        ₱{{ sale.total_amount|floatformat:2 }}
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NOTES -->
+    {% if sale.notes %}
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-5">
+        <h4 class="font-semibold text-white">Transaction Notes</h4>
+        <p class="text-sm text-slate-400 mt-2 whitespace-pre-line">{{ sale.notes }}</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

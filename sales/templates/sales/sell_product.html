@@ -1,0 +1,298 @@
+
+{% extends "base.html" %}
+
+{% block title %}Sell Product | TelecomOps{% endblock %}
+{% block breadcrumb %}SALES / NEW TRANSACTION{% endblock %}
+{% block page_title %}Sell Product{% endblock %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto space-y-5">
+
+    <!-- HEADER -->
+    <div>
+        <h2 class="text-lg font-semibold text-white">
+            New Sales Transaction
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+            Record a product sale and update inventory stock.
+        </p>
+    </div>
+
+    <!-- PRODUCT INFORMATION -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-5">
+
+        <h3 class="text-sm font-semibold text-white mb-4">
+            Product Information
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Product</p>
+                <p class="text-sm text-white font-medium mt-1">
+                    {{ product.name }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">SKU</p>
+                <p class="text-sm text-blue-400 font-medium mt-1">
+                    {{ product.sku }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Available Stock</p>
+                <p class="text-sm text-emerald-400 font-semibold mt-1">
+                    {{ product.stock_balance.available_stock|default:0 }}
+                    {{ product.unit_of_measure }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] uppercase text-slate-500">Tracking Type</p>
+                <p class="text-sm text-white mt-1">
+                    {{ product.get_tracking_type_display }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SALES FORM -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-slate-800">
+            <h3 class="text-sm font-semibold text-white">
+                Transaction Details
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Enter the buyer and product quantity.
+            </p>
+        </div>
+
+        <form method="POST" class="p-5 space-y-5">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-xs text-red-400">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- CUSTOMER -->
+            <div>
+                <label class="block text-xs text-slate-300 mb-2">
+                    Registered Customer
+                </label>
+
+                <select
+                    name="customer"
+                    id="id_customer"
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                >
+                    <option value="">Walk-in / Unregistered Customer</option>
+
+                    {% for customer in form.fields.customer.queryset %}
+                        <option
+                            value="{{ customer.pk }}"
+                            {% if form.customer.value|stringformat:"s" == customer.pk|stringformat:"s" %}selected{% endif %}
+                        >
+                            {{ customer.customer_id }} -
+                            {{ customer.company_name|default:customer.first_name }}
+                            {{ customer.last_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                {% for error in form.customer.errors %}
+                    <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- BUYER NAME -->
+            <div>
+                <label class="block text-xs text-slate-300 mb-2">
+                    Buyer's Name
+                </label>
+
+                <input
+                    type="text"
+                    name="buyer_name"
+                    id="id_buyer_name"
+                    value="{{ form.buyer_name.value|default:'' }}"
+                    maxlength="200"
+                    placeholder="Enter buyer's full name"
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                >
+
+                {% for error in form.buyer_name.errors %}
+                    <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- RELEASED BY -->
+            <div>
+                <label for="employee_search" class="block text-xs text-slate-300 mb-2">
+                    Released By (Employee)
+                </label>
+
+                <input
+                    type="text"
+                    id="employee_search"
+                    placeholder="Search employee by name or username..."
+                    autocomplete="off"
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none mb-2"
+                >
+
+                <select
+                    name="released_by"
+                    id="id_released_by"
+                    required
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                >
+                    <option value="">Select releasing employee</option>
+
+                    {% for employee in form.fields.released_by.queryset %}
+                        <option
+                            value="{{ employee.pk }}"
+                            {% if form.released_by.value|stringformat:"s" == employee.pk|stringformat:"s" %}selected{% endif %}
+                        >
+                            {{ employee.get_full_name|default:employee.username }} (@{{ employee.username }})
+                        </option>
+                    {% endfor %}
+                </select>
+
+                {% for error in form.released_by.errors %}
+                    <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- QUANTITY AND PRICE -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div>
+                    <label class="block text-xs text-slate-300 mb-2">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        value="{{ form.quantity.value|default:1 }}"
+                        required
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                    >
+
+                    {% for error in form.quantity.errors %}
+                        <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-300 mb-2">
+                        Unit Selling Price (₱)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="unit_price"
+                        min="0"
+                        step="0.01"
+                        value="{{ form.unit_price.value|default:'0.00' }}"
+                        required
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                    >
+
+                    {% for error in form.unit_price.errors %}
+                        <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- NOTES -->
+            <div>
+                <label class="block text-xs text-slate-300 mb-2">
+                    Notes (Optional)
+                </label>
+
+                <textarea
+                    name="notes"
+                    rows="3"
+                    placeholder="Additional transaction notes..."
+                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
+                >{{ form.notes.value|default:'' }}</textarea>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex flex-col sm:flex-row justify-end gap-2 pt-4 border-t border-slate-800">
+
+                <a
+                    href="{% url 'inventory:product_detail' product.pk %}"
+                    class="px-4 py-2.5 rounded-lg border border-slate-700 text-slate-300 text-xs text-center hover:bg-slate-800 transition"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition"
+                >
+                    Complete Sale
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const customerSelect = document.getElementById("id_customer");
+    const buyerName = document.getElementById("id_buyer_name");
+    const employeeSearch = document.getElementById("employee_search");
+    const employeeSelect = document.getElementById("id_released_by");
+
+    if (employeeSearch && employeeSelect) {
+        employeeSearch.addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase().trim();
+
+            Array.from(employeeSelect.options).forEach(function (option, index) {
+                if (index === 0) return;
+
+                const employeeName = option.text.toLowerCase();
+
+                option.hidden = !employeeName.includes(searchValue);
+            });
+
+            // Clear selection if it no longer matches the search.
+            const selectedOption = employeeSelect.options[employeeSelect.selectedIndex];
+
+            if (selectedOption && selectedOption.hidden) {
+                employeeSelect.value = "";
+            }
+        });
+    }
+
+    if (!customerSelect || !buyerName) return;
+
+    customerSelect.addEventListener("change", function () {
+        if (!this.value) {
+            buyerName.value = "";
+            return;
+        }
+
+        const selectedText = this.options[this.selectedIndex].text;
+        buyerName.value = selectedText.replace(/^CUS-\d+\s*-\s*/, "").trim();
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="module" style="max-width: 750px; padding: 20px;">
+    <h1>Void Invoice: {{ invoice.invoice_number }}</h1>
+
+    <p>
+        You are about to void this invoice. This action will preserve
+        the invoice record and create an audit log.
+    </p>
+
+    <table style="width: 100%; margin: 20px 0;">
+        <tr>
+            <th align="left">Customer</th>
+            <td>{{ invoice.customer }}</td>
+        </tr>
+        <tr>
+            <th align="left">Invoice Number</th>
+            <td>{{ invoice.invoice_number }}</td>
+        </tr>
+        <tr>
+            <th align="left">Total Amount</th>
+            <td>₱{{ invoice.total_amount }}</td>
+        </tr>
+        <tr>
+            <th align="left">Current Status</th>
+            <td>{{ invoice.get_status_display }}</td>
+        </tr>
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="reason">
+                <strong>Reason for voiding (required)</strong>
+            </label>
+
+            <textarea
+                id="reason"
+                name="reason"
+                rows="4"
+                required
+                style="width: 100%; margin-top: 8px;"
+                placeholder="Enter the reason for voiding this invoice..."
+            ></textarea>
+        </div>
+
+        <button type="submit" class="button" style="background: #ba2121;">
+            Confirm Void Invoice
+        </button>
+
+        <a
+            href="{% url 'admin:billing_invoice_change' invoice.pk %}"
+            class="button cancel-link"
+        >
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,535 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | TelecomOps{% endblock %}
+{% block breadcrumb %}INVENTORY / PRODUCTS / DETAILS{% endblock %}
+{% block page_title %}Product Details{% endblock %}
+
+{% block content %}
+
+<div class="space-y-4">
+
+    <!-- HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+        <div>
+            <h2 class="text-lg font-semibold text-white">
+                {{ product.name }}
+            </h2>
+
+            <p class="text-xs text-slate-400 mt-1">
+                Product SKU: {{ product.sku }}
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+
+            <a href="{% url 'inventory:products' %}"
+               class="px-3 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                Back to Products
+            </a>
+
+            {% if product.is_active and product.tracking_type == "QUANTITY" and available_stock > 0 %}
+                <a href="{% url 'sales:sell_product' product.pk %}"
+                class="px-3 py-2 rounded-md bg-emerald-600 text-white text-xs hover:bg-emerald-500 transition inline-flex items-center gap-2">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                    Send to Sales
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCT STATUS -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+                <p class="text-[10px] uppercase tracking-wide text-slate-500">
+                    Product Status
+                </p>
+
+                {% if product.is_active %}
+                    <span class="inline-flex items-center gap-1.5 mt-2 text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        Active
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center gap-1.5 mt-2 text-xs text-red-400 bg-red-500/10 px-2.5 py-1 rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                        Inactive
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="text-right">
+                <p class="text-[10px] text-slate-500">
+                    Tracking Type
+                </p>
+                <p class="text-xs text-white font-medium mt-1">
+                    {{ product.get_tracking_type_display }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STOCK OVERVIEW -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+            <p class="text-xs text-slate-400">Quantity on Hand</p>
+            <h3 class="text-2xl font-bold text-white mt-2">
+                {{ quantity_on_hand }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">
+                {{ product.unit_of_measure }}
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+            <p class="text-xs text-slate-400">Reserved Stock</p>
+            <h3 class="text-2xl font-bold text-amber-400 mt-2">
+                {{ quantity_reserved }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">
+                {{ product.unit_of_measure }}
+            </p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+            <p class="text-xs text-slate-400">Available Stock</p>
+            <h3 class="text-2xl font-bold text-emerald-400 mt-2">
+                {{ available_stock }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">
+                {{ product.unit_of_measure }}
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCT INFORMATION -->
+    <!-- PRODUCT INFORMATION WITH IMAGE -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        <!-- PRODUCT INFORMATION -->
+        <div class="lg:col-span-2 bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Product Information
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-1">
+                    General information and classification.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-4">
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">SKU</p>
+                    <p class="text-xs text-blue-400 font-semibold mt-1">
+                        {{ product.sku }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">Product Name</p>
+                    <p class="text-xs text-white font-medium mt-1">
+                        {{ product.name }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">Category</p>
+                    <p class="text-xs text-white mt-1">
+                        {{ product.category.name|default:"—" }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">Unit of Measure</p>
+                    <p class="text-xs text-white mt-1">
+                        {{ product.unit_of_measure }}
+                    </p>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <p class="text-[10px] text-slate-500 uppercase">Description</p>
+                    <p class="text-xs text-slate-300 mt-1 whitespace-pre-line">
+                        {{ product.description|default:"No description provided." }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        
+        <!-- PRODUCT IMAGE GALLERY -->
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Product Image Gallery
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-1">
+                    Product images and visual references.
+                </p>
+            </div>
+
+            <div class="p-4 space-y-3">
+
+                <!-- MAIN IMAGE -->
+                <div class="flex items-center justify-center min-h-[260px] bg-[#080d19] border border-slate-800 rounded-lg p-3">
+
+                    {% if product.images.all %}
+                        <img
+                            src="{{ product.images.all.0.image.url }}"
+                            alt="{{ product.name }}"
+                            id="productDetailImage"
+                            class="max-w-full max-h-[280px] object-contain rounded-lg cursor-zoom-in hover:scale-105 transition duration-200"
+                        >
+                    {% elif product.image %}
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                            id="productDetailImage"
+                            class="max-w-full max-h-[280px] object-contain rounded-lg cursor-zoom-in hover:scale-105 transition duration-200"
+                        >
+                    {% else %}
+                        <p class="text-xs text-slate-500">
+                            No image available
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                <!-- IMAGE THUMBNAILS -->
+                {% if product.images.all %}
+                    <div class="grid grid-cols-4 gap-2">
+
+                        {% for product_image in product.images.all %}
+                            <button
+                                type="button"
+                                class="product-gallery-thumbnail border border-slate-700 rounded-lg p-1 bg-[#080d19] hover:border-blue-500 transition"
+                                data-image="{{ product_image.image.url }}"
+                            >
+                                <img
+                                    src="{{ product_image.image.url }}"
+                                    alt="{{ product.name }} image {{ forloop.counter }}"
+                                    class="w-full h-16 object-contain rounded"
+                                >
+                            </button>
+                        {% endfor %}
+
+                    </div>
+                {% endif %}
+
+                <p class="text-[10px] text-slate-500 text-center">
+                    {% if product.images.all %}
+                        {{ product.images.count }} product image{{ product.images.count|pluralize }}
+                    {% elif product.image %}
+                        1 product image
+                    {% else %}
+                        No product images uploaded
+                    {% endif %}
+                </p>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- PRICING AND STOCK SETTINGS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Pricing Information
+                </h3>
+            </div>
+
+            <div class="p-4 space-y-4">
+
+                <div class="flex justify-between gap-3">
+                    <span class="text-xs text-slate-400">Cost Price</span>
+                    <span class="text-xs text-white font-semibold">
+                        ₱{{ product.cost_price|floatformat:2 }}
+                    </span>
+                </div>
+
+                <div class="flex justify-between gap-3">
+                    <span class="text-xs text-slate-400">Selling Price</span>
+                    <span class="text-xs text-white font-semibold">
+                        {% if product.selling_price != None %}
+                            ₱{{ product.selling_price|floatformat:2 }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Stock Settings
+                </h3>
+            </div>
+
+            <div class="p-4 space-y-4">
+
+                <div class="flex justify-between gap-3">
+                    <span class="text-xs text-slate-400">Minimum Stock</span>
+                    <span class="text-xs text-white font-semibold">
+                        {{ product.minimum_stock }} {{ product.unit_of_measure }}
+                    </span>
+                </div>
+
+                <div class="flex justify-between gap-3">
+                    <span class="text-xs text-slate-400">Stock Status</span>
+
+                    {% if quantity_on_hand <= product.minimum_stock %}
+                        <span class="text-xs text-amber-400 font-semibold">
+                            Low Stock
+                        </span>
+                    {% else %}
+                        <span class="text-xs text-emerald-400 font-semibold">
+                            Sufficient Stock
+                        </span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RECORD INFORMATION -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+
+        <h3 class="text-sm font-semibold text-white mb-4">
+            Record Information
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div>
+                <p class="text-[10px] text-slate-500 uppercase">
+                    Date Created
+                </p>
+                <p class="text-xs text-slate-300 mt-1">
+                    {{ product.created_at|date:"M d, Y - h:i A" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-[10px] text-slate-500 uppercase">
+                    Last Updated
+                </p>
+                <p class="text-xs text-slate-300 mt-1">
+                    {{ product.updated_at|date:"M d, Y - h:i A" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FULLSCREEN IMAGE VIEWER -->
+<div id="imageViewer"
+     class="hidden fixed inset-0 z-[9999] bg-black/95 items-center justify-center p-4">
+
+    <button
+        type="button"
+        id="closeImageViewer"
+        class="absolute top-5 right-6 text-white text-3xl hover:text-red-400 transition"
+        aria-label="Close image viewer">
+        &times;
+    </button>
+
+        
+    <!-- PREVIOUS IMAGE -->
+    <button
+        type="button"
+        id="previousProductImage"
+        class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2
+            w-10 h-10 sm:w-12 sm:h-12 rounded-full
+            bg-white/10 hover:bg-white/25 text-white
+            text-2xl flex items-center justify-center
+            transition z-10"
+        aria-label="Previous image">
+        &#10094;
+    </button>
+
+    <!-- ZOOMED IMAGE -->
+    <img
+        id="fullscreenProductImage"
+        src=""
+        alt="{{ product.name }}"
+        class="max-w-[85%] max-h-[85%] object-contain rounded-lg"
+    >
+
+    <!-- NEXT IMAGE -->
+    <button
+        type="button"
+        id="nextProductImage"
+        class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2
+            w-10 h-10 sm:w-12 sm:h-12 rounded-full
+            bg-white/10 hover:bg-white/25 text-white
+            text-2xl flex items-center justify-center
+            transition z-10"
+        aria-label="Next image">
+        &#10095;
+    </button>
+
+
+</div>
+
+<script>  
+    document.addEventListener("DOMContentLoaded", function () {
+        const productImage = document.getElementById("productDetailImage");
+        const imageViewer = document.getElementById("imageViewer");
+        const fullscreenImage = document.getElementById("fullscreenProductImage");
+        const closeButton = document.getElementById("closeImageViewer");
+
+        const previousButton = document.getElementById("previousProductImage");
+        const nextButton = document.getElementById("nextProductImage");
+
+        const thumbnails = Array.from(
+            document.querySelectorAll(".product-gallery-thumbnail")
+        );
+
+        // COLLECT ALL GALLERY IMAGE URLS
+        let productImages = thumbnails.map(
+            thumbnail => thumbnail.dataset.image
+        );
+
+        // SUPPORT LEGACY SINGLE IMAGE
+        if (productImages.length === 0 && productImage) {
+            productImages = [productImage.src];
+        }
+
+        let currentImageIndex = 0;
+
+        // UPDATE MAIN IMAGE AND FULLSCREEN IMAGE
+        function showProductImage(index) {
+            if (productImages.length === 0) return;
+
+            currentImageIndex =
+                (index + productImages.length) % productImages.length;
+
+            const selectedImage = productImages[currentImageIndex];
+
+            if (productImage) {
+                productImage.src = selectedImage;
+            }
+
+            if (fullscreenImage) {
+                fullscreenImage.src = selectedImage;
+            }
+
+            // Highlight selected thumbnail
+            thumbnails.forEach(function (thumbnail, i) {
+                thumbnail.classList.toggle(
+                    "border-blue-500",
+                    i === currentImageIndex
+                );
+
+                thumbnail.classList.toggle(
+                    "border-slate-700",
+                    i !== currentImageIndex
+                );
+            });
+        }
+
+        // THUMBNAIL CLICK
+        thumbnails.forEach(function (thumbnail, index) {
+            thumbnail.addEventListener("click", function () {
+                showProductImage(index);
+            });
+        });
+
+        if (!productImage || !imageViewer || !fullscreenImage || !closeButton) {
+            return;
+        }
+
+        // OPEN FULLSCREEN VIEWER
+        productImage.addEventListener("click", function () {
+            showProductImage(currentImageIndex);
+
+            imageViewer.classList.remove("hidden");
+            imageViewer.classList.add("flex");
+        });
+
+        // NEXT IMAGE
+        if (nextButton) {
+            nextButton.addEventListener("click", function (event) {
+                event.stopPropagation();
+                showProductImage(currentImageIndex + 1);
+            });
+        }
+
+        // PREVIOUS IMAGE
+        if (previousButton) {
+            previousButton.addEventListener("click", function (event) {
+                event.stopPropagation();
+                showProductImage(currentImageIndex - 1);
+            });
+        }
+
+        // CLOSE VIEWER
+        function closeViewer() {
+            imageViewer.classList.add("hidden");
+            imageViewer.classList.remove("flex");
+        }
+
+        closeButton.addEventListener("click", closeViewer);
+
+        imageViewer.addEventListener("click", function (event) {
+            if (event.target === imageViewer) {
+                closeViewer();
+            }
+        });
+
+        // KEYBOARD NAVIGATION
+        document.addEventListener("keydown", function (event) {
+            if (imageViewer.classList.contains("hidden")) return;
+
+            if (event.key === "Escape") {
+                closeViewer();
+            }
+
+            if (event.key === "ArrowRight") {
+                showProductImage(currentImageIndex + 1);
+            }
+
+            if (event.key === "ArrowLeft") {
+                showProductImage(currentImageIndex - 1);
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}

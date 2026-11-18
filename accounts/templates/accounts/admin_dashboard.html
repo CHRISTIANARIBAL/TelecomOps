@@ -1,0 +1,59 @@
+
+{% extends 'accounts/admin_base.html' %}
+
+{% block title %}Admin Dashboard | TelecomOps{% endblock %}
+
+{% block breadcrumb %}WORKSPACE / OVERVIEW{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="mb-5">
+    <h1 class="text-xl font-bold">
+        Welcome back, {{ request.user.username }}.
+    </h1>
+
+    <p class="text-sm text-slate-500 mt-2">
+        Here's your centralized administration workspace.
+    </p>
+</div>
+
+<!-- DASHBOARD PLACEHOLDER -->
+<div class="min-h-[420px] rounded-xl border border-dashed border-slate-700
+    flex flex-col items-center justify-center text-center px-6 py-12">
+
+    <div class="w-16 h-16 rounded-xl bg-blue-600/10 border border-blue-500/20
+        flex items-center justify-center mb-6">
+
+        <svg class="w-8 h-8 text-blue-400"
+            fill="none" stroke="currentColor"
+            stroke-width="1.5" viewBox="0 0 24 24">
+
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+
+    </div>
+
+    <h2 class="text-lg font-semibold">
+        Your administration workspace is ready
+    </h2>
+
+    <p class="max-w-lg text-sm text-slate-500 leading-6 mt-3">
+        Your administrator dashboard is ready for system management
+        integration. User accounts, permissions, organization settings,
+        audit logs, and other administrative information will appear here
+        as we develop each module.
+    </p>
+
+    <div class="flex items-center gap-2 mt-6 text-xs text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+        Administration module initialized
+    </div>
+
+</div>
+
+{% endblock %}

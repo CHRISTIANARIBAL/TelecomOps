@@ -1,0 +1,395 @@
+
+{% extends 'accounts/admin_base.html' %}
+
+{% block title %}Manage Account | TelecomOps{% endblock %}
+
+{% block breadcrumb %}USER MANAGEMENT / USER ACCOUNTS / MANAGE ACCOUNT{% endblock %}
+
+{% block page_title %}Manage Account{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+
+    <div>
+        <h1 class="text-xl font-bold text-white">
+            Manage Account
+        </h1>
+
+        <p class="text-sm text-slate-500 mt-2">
+            View and update the selected user's account information.
+        </p>
+    </div>
+
+    <a href="{% url 'user_accounts' %}"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 transition text-xs font-semibold">
+
+        ← Back to User Accounts
+
+    </a>
+
+</div>
+
+<!-- ACCOUNT PROFILE -->
+<div class="rounded-xl border border-slate-800 bg-[#0c1424] p-5 mb-6">
+
+    <div class="flex items-center gap-4">
+
+        <div class="w-14 h-14 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-xl font-bold text-blue-400">
+
+            {{ account.username|first|upper }}
+
+        </div>
+
+        <div>
+            <h2 class="text-base font-semibold text-white">
+                {{ account.get_full_name|default:account.username }}
+            </h2>
+
+            <p class="text-xs text-slate-500 mt-1">
+                Account ID: {{ account.pk }}
+            </p>
+
+            <p class="text-xs text-slate-500 mt-1">
+                Registered: {{ account.date_joined|date:"M d, Y" }}
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ACCOUNT INFORMATION FORM -->
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="rounded-xl border border-slate-800 bg-[#0c1424] overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-slate-800">
+
+            <h2 class="text-sm font-semibold text-white">
+                Personal Information
+            </h2>
+
+            <p class="text-xs text-slate-500 mt-1">
+                Update the account's personal and login information.
+            </p>
+
+        </div>
+
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {% for field in form %}
+
+            <div class="space-y-2">
+
+                <label for="{{ field.id_for_label }}"
+                    class="block text-xs font-medium text-slate-400">
+
+                    {{ field.label }}
+
+                </label>
+
+
+                            
+                {% if field.name == 'role' or field.name == 'approval_status' %}
+
+                    <div class="relative telecomops-dropdown">
+
+                        {{ field }}
+
+                        <button
+                            type="button"
+                            class="telecomops-dropdown-trigger"
+                            aria-expanded="false">
+
+                            <span class="telecomops-dropdown-label">
+                                {{ field.label }}
+                            </span>
+
+                            <svg class="w-4 h-4 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </button>
+
+                        <div class="telecomops-dropdown-menu hidden">
+
+                            {% for value, label in field.field.choices %}
+
+                                <button
+                                    type="button"
+                                    class="telecomops-dropdown-option"
+                                    data-value="{{ value }}"
+                                    data-label="{{ label }}">
+
+                                    {{ label }}
+
+                                </button>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    {{ field }}
+
+                {% endif %}
+
+
+
+                {% if field.help_text %}
+                    <p class="text-[10px] text-slate-500">
+                        {{ field.help_text }}
+                    </p>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <p class="text-xs text-red-400">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="px-5 pb-4">
+            {% for error in form.non_field_errors %}
+                <p class="text-xs text-red-400">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="px-5 py-4 border-t border-slate-800 flex justify-end gap-3">
+
+            <a href="{% url 'user_accounts' %}"
+                class="px-4 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition">
+
+                Cancel
+
+            </a>
+
+            <button type="submit"
+                class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition">
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+<!-- ACCOUNT SECURITY SECTION -->
+<div class="rounded-xl border border-slate-800 bg-[#0c1424] p-5 mt-6">
+
+    <div class="flex items-center justify-between mb-5">
+
+        <div class="flex items-center gap-3">
+
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+
+                <svg class="w-5 h-5 text-blue-400"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.7"
+                     viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 3L4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4z"/>
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m9 12 2 2 4-4"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+                <h2 class="text-sm font-semibold text-white">
+                    Account Security
+                </h2>
+
+                <p class="text-xs text-slate-500 mt-1">
+                    Security and verification information.
+                </p>
+            </div>
+
+        </div>
+
+        {% if account.is_active %}
+            <span class="px-3 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Active
+            </span>
+        {% else %}
+            <span class="px-3 py-1 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+                Inactive
+            </span>
+        {% endif %}
+
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <!-- EMAIL VERIFICATION -->
+        <div class="rounded-lg border border-slate-800 bg-[#080d19] p-4">
+
+            <p class="text-xs text-slate-500 mb-2">
+                Email Verification
+            </p>
+
+            {% if account.email_verified %}
+                <p class="text-sm font-semibold text-emerald-400">
+                    Verified
+                </p>
+            {% else %}
+                <p class="text-sm font-semibold text-amber-400">
+                    Not Verified
+                </p>
+            {% endif %}
+
+        </div>
+
+        <!-- ACCOUNT APPROVAL -->
+        <div class="rounded-lg border border-slate-800 bg-[#080d19] p-4">
+
+            <p class="text-xs text-slate-500 mb-2">
+                Account Approval
+            </p>
+
+            <p class="text-sm font-semibold text-slate-200">
+                {{ account.get_approval_status_display }}
+            </p>
+
+        </div>
+
+        <!-- PASSWORD RECOVERY -->
+        <div class="rounded-lg border border-slate-800 bg-[#080d19] p-4 sm:col-span-2">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
+
+                    <svg class="w-4 h-4 text-blue-400"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         viewBox="0 0 24 24">
+
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="m3 7 9 6 9-6"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold text-slate-200">
+                        Password Recovery
+                    </p>
+
+                    <p class="text-xs text-slate-500 mt-1">
+                        Password resets are handled through Gmail OTP verification.
+                    </p>
+                </div>
+
+                <div class="ml-auto">
+                    <span class="text-[10px] font-semibold text-blue-400">
+                        Gmail OTP
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.telecomops-dropdown').forEach(dropdown => {
+
+        const select = dropdown.querySelector('select');
+        const trigger = dropdown.querySelector('.telecomops-dropdown-trigger');
+        const label = dropdown.querySelector('.telecomops-dropdown-label');
+        const menu = dropdown.querySelector('.telecomops-dropdown-menu');
+        const options = dropdown.querySelectorAll('.telecomops-dropdown-option');
+
+        if (!select || !trigger || !menu) return;
+
+        // Set the currently selected value.
+        const currentOption = select.options[select.selectedIndex];
+
+        if (currentOption) {
+            label.textContent = currentOption.text;
+        }
+
+        trigger.addEventListener('click', function () {
+            const isOpen = !menu.classList.contains('hidden');
+
+            document.querySelectorAll('.telecomops-dropdown-menu')
+                .forEach(item => item.classList.add('hidden'));
+
+            document.querySelectorAll('.telecomops-dropdown-trigger')
+                .forEach(item => item.setAttribute('aria-expanded', 'false'));
+
+            if (!isOpen) {
+                menu.classList.remove('hidden');
+                trigger.setAttribute('aria-expanded', 'true');
+            }
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', function () {
+
+                select.value = this.dataset.value;
+                label.textContent = this.dataset.label;
+
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+
+                menu.classList.add('hidden');
+                trigger.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.telecomops-dropdown')) {
+            document.querySelectorAll('.telecomops-dropdown-menu')
+                .forEach(menu => menu.classList.add('hidden'));
+
+            document.querySelectorAll('.telecomops-dropdown-trigger')
+                .forEach(trigger => trigger.setAttribute('aria-expanded', 'false'));
+        }
+    });
+
+});
+</script>
+{% endblock %}

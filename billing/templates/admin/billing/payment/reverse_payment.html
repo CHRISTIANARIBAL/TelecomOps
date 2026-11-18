@@ -1,0 +1,100 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="module" style="max-width: 750px; padding: 20px;">
+
+    <h1>Reverse Payment: {{ payment.payment_number }}</h1>
+
+    <p>
+        You are about to reverse this payment.
+        The original payment record and its allocations will be preserved.
+    </p>
+
+    <table style="width: 100%; margin: 20px 0;">
+        <tr>
+            <th align="left">Payment Number</th>
+            <td>{{ payment.payment_number }}</td>
+        </tr>
+        <tr>
+            <th align="left">Customer</th>
+            <td>{{ payment.customer }}</td>
+        </tr>
+        <tr>
+            <th align="left">Payment Date</th>
+            <td>{{ payment.payment_date }}</td>
+        </tr>
+        <tr>
+            <th align="left">Amount</th>
+            <td>₱{{ payment.amount }}</td>
+        </tr>
+        <tr>
+            <th align="left">Payment Method</th>
+            <td>{{ payment.get_payment_method_display }}</td>
+        </tr>
+        <tr>
+            <th align="left">Reference Number</th>
+            <td>{{ payment.reference_number|default:"—" }}</td>
+        </tr>
+        <tr>
+            <th align="left">Current Status</th>
+            <td>{{ payment.get_status_display }}</td>
+        </tr>
+    </table>
+
+    <h3>Payment Allocations</h3>
+
+    <table style="width: 100%; margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th align="left">Invoice</th>
+                <th align="right">Allocated Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for allocation in payment.allocations.all %}
+            <tr>
+                <td>{{ allocation.invoice.invoice_number }}</td>
+                <td align="right">₱{{ allocation.amount }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No payment allocations found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="reason">
+                <strong>Reason for reversal (required)</strong>
+            </label>
+
+            <textarea
+                id="reason"
+                name="reason"
+                rows="4"
+                required
+                style="width: 100%; margin-top: 8px;"
+                placeholder="Enter the reason for reversing this payment..."
+            ></textarea>
+        </div>
+
+        <button type="submit" class="button"
+                style="background: #ba2121; color: white;">
+            Confirm Payment Reversal
+        </button>
+
+        <a
+            href="{% url 'admin:billing_payment_change' payment.pk %}"
+            class="button cancel-link"
+        >
+            Cancel
+        </a>
+    </form>
+
+</div>
+{% endblock %}

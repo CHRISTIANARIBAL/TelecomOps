@@ -1,0 +1,476 @@
+
+{% extends "base.html" %}
+
+{% block title %}Clients | TelecomOps{% endblock %}
+{% block breadcrumb %}BILLING / CLIENTS{% endblock %}
+{% block page_title %}Client Management{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+{% if messages %}
+    {% for message in messages %}
+        <div class="rounded-lg border px-3 py-2.5 text-xs
+            {% if message.tags == 'success' %}
+                border-emerald-500/20 bg-emerald-500/10 text-emerald-400
+            {% else %}
+                border-red-500/20 bg-red-500/10 text-red-400
+            {% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+    <!-- HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+            <h2 class="text-lg font-semibold text-white">All Clients</h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+                Manage residential, SME, and corporate customers.
+            </p>
+        </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Total Clients</p>
+            <h3 class="text-2xl font-bold text-white mt-1.5">
+                {{ total_customers }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">All registered customers</p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Active Clients</p>
+            <h3 class="text-2xl font-bold text-emerald-400 mt-1.5">
+                {{ active_customers }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">Currently active accounts</p>
+        </div>
+
+        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <p class="text-xs text-slate-400">Inactive Clients</p>
+            <h3 class="text-2xl font-bold text-red-400 mt-1.5">
+                {{ inactive_customers }}
+            </h3>
+            <p class="text-[10px] text-slate-500 mt-1">Inactive customer accounts</p>
+        </div>
+
+    </div>
+
+    <!-- SEARCH AND FILTERS -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+
+        <form method="GET" class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+
+            <!-- SEARCH -->
+            
+<!-- SEARCH -->
+<div class="lg:col-span-6">
+    <label class="block text-[11px] font-medium text-slate-400 mb-1.5">
+        Search Clients
+    </label>
+
+    <div class="relative">
+        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" stroke-width="2"/>
+            <path stroke-linecap="round" stroke-width="2" d="m16 16 4 4"/>
+        </svg>
+
+        <input
+            type="text"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="Search ID, name, email, or contact..."
+            class="w-full bg-[#080d19] border border-slate-700 rounded-md pl-9 pr-28 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+
+        <button type="submit"
+                class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded bg-blue-600 text-white text-[11px] font-semibold hover:bg-blue-500 transition">
+            Search
+        </button>
+    </div>
+</div>
+
+
+            <!-- CUSTOMER TYPE -->
+            <div class="lg:col-span-3">
+                <label class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                    Customer Type
+                </label>
+
+                <select name="type"
+                        onchange="this.form.submit()"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white">
+
+                    <option value="">All Types</option>
+
+                    {% for value, label in customer_types %}
+                        <option value="{{ value }}"
+                            {% if selected_type == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <!-- ACCOUNT STATUS FILTER -->
+            <div class="lg:col-span-3 min-w-0">
+                <label class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                    Account Status
+                </label>
+
+                <select name="status"
+                        onchange="this.form.submit()"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+
+                    <option value="" {% if not selected_status %}selected{% endif %}>
+                        All Statuses
+                    </option>
+
+                    <option value="active"
+                            {% if selected_status == 'active' %}selected{% endif %}>
+                        Active
+                    </option>
+
+                    <option value="inactive"
+                            {% if selected_status == 'inactive' %}selected{% endif %}>
+                        Inactive
+                    </option>
+
+                </select>
+            </div>
+
+            <!-- FORM ACTIONS -->
+            <div class="lg:col-span-12 flex justify-end gap-2">
+    
+                <a href="{% url 'billing:clients' %}?status=inactive"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-400 text-xs font-semibold hover:bg-amber-500/20 transition">
+
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                        Inactive Clients
+                </a>
+                <a href="{% url 'billing:clients' %}?status=active"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    Active Clients
+                </a>
+                <a href="{% url 'billing:add_client' %}"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition">
+
+                    <svg class="w-3.5 h-3.5" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M12 5v14m-7-7h14"/>
+                    </svg>
+
+                    Add Client
+                </a>
+
+                <a href="{% url 'billing:clients' %}"
+                class="px-3 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+    </div>
+
+    <!-- CLIENT DIRECTORY -->
+    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+        <!-- TABLE HEADER -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-b border-slate-800">
+
+            <div>
+                <h3 class="text-sm font-semibold text-white">Client Records</h3>
+
+                <p class="text-[10px] text-slate-400 mt-0.5">
+                    {% if page_obj.paginator.count %}
+                        Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                        of {{ page_obj.paginator.count }} clients
+                    {% else %}
+                        No client records found
+                    {% endif %}
+                </p>
+            </div>
+
+            <span class="text-[10px] text-slate-500">
+                {{ page_obj.paginator.num_pages }} page{{ page_obj.paginator.num_pages|pluralize }}
+            </span>
+
+        </div>
+
+
+        <!-- CLIENT TABLE -->
+        <div class="overflow-x-auto">
+
+            <table class="w-full min-w-[1200px] text-xs text-left whitespace-nowrap">
+                <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/50">
+
+                    <tr>
+                        <th class="px-4 py-2.5 font-semibold">Customer ID</th>
+                        <th class="px-4 py-2.5 font-semibold">Client Information</th>
+                        <th class="px-4 py-2.5 font-semibold">Customer Type</th>
+                        <th class="px-4 py-2.5 font-semibold">Contact Details</th>
+                        <th class="px-4 py-2.5 font-semibold">Location</th>
+                        <th class="px-4 py-2.5 font-semibold">Status</th>
+                        {% if request.user.is_superuser %}
+                            <th class="px-4 py-2.5 font-semibold text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-800">
+
+                    {% for customer in customers %}
+
+                    <tr class="{% if forloop.counter0|divisibleby:2 %}bg-[#111c30]{% else %}bg-[#0d1728]{% endif %} hover:bg-slate-800/60 transition">
+
+                        <!-- CUSTOMER ID -->
+                        <td class="px-4 py-3">
+                            <a href="{% url 'billing:edit_client' customer.pk %}"
+                            class="font-semibold text-blue-400 hover:text-blue-300 hover:underline transition">
+                                {{ customer.customer_id|default:"—" }}
+                            </a>
+                        </td>
+
+                        <!-- CLIENT INFORMATION -->
+                        <td class="px-4 py-3">
+
+                            <a href="{% url 'billing:edit_client' customer.pk %}"
+                            class="text-white font-semibold hover:text-blue-400 hover:underline transition">
+                                
+                                    {{ customer.first_name }} {{ customer.last_name }}
+                            
+                            </a>
+
+                            <div class="h-4 mt-0.5">
+                                {% if customer.company_name and customer.contact_person %}
+                                    <p class="text-[10px] text-slate-500">
+                                        Contact: {{ customer.contact_person }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                                {% with current_subscription=customer.current_subscriptions|first %}
+                                    {% if current_subscription %}
+                                        <!-- INTERNET PLAN -->
+                                        <p class="text-[10px] text-emerald-400 mt-0.5">
+                                            {{ current_subscription.internet_plan.plan_name }}
+                                        </p>
+
+                                        <!-- BILLING DATE -->
+                                        <p class="text-[10px] text-amber-400 mt-0.5">
+                                            Billing: {{ current_subscription.billing_date|date:"M d, Y" }}
+                                        </p>
+                                    {% else %}
+                                        <p class="text-[10px] text-slate-500 mt-0.5">
+                                            No Plan Assigned
+                                        </p>
+                                    {% endif %}
+                                {% endwith %}
+
+                        </td>
+
+                        <!-- CUSTOMER TYPE -->
+                        <td class="px-4 py-3">
+                            <p class="text-slate-300">
+                                {{ customer.get_customer_type_display }}
+                            </p>
+
+                            <!-- RESERVED SPACE TO MATCH CONTACT PERSON ROW -->
+                            <div class="h-4 mt-0.5"></div>
+
+                            {% with current_subscription=customer.current_subscriptions|first %}
+                                {% if current_subscription %}
+                                    <p class="text-[10px] text-blue-400 mt-1">
+                                        Installation: {{ current_subscription.installation_date|date:"M d, Y" }}
+                                    </p>
+                                {% else %}
+                                    <p class="text-[10px] text-slate-500 mt-1">
+                                        No Installation Date
+                                    </p>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+
+                        <!-- CONTACT DETAILS -->
+                        <td class="px-4 py-3">
+
+                            <p class="text-slate-300">
+                                {{ customer.contact_number }}
+                            </p>
+
+                            {% if customer.email %}
+                            <p class="text-[10px] text-slate-500 mt-0.5">
+                                {{ customer.email }}
+                            </p>
+                            {% endif %}
+
+                        </td>
+
+                        <!-- LOCATION -->
+                        <td class="px-4 py-3">
+
+                            {{ customer.city|default:"—" }}
+
+                            {% if customer.province %}
+                            <p class="text-[10px] text-slate-500 mt-0.5">
+                                {{ customer.province }}
+                            </p>
+                            {% endif %}
+
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="px-4 py-3">
+
+                            {% if customer.is_active %}
+
+                            <span class="inline-flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                Active
+                            </span>
+
+                            {% else %}
+
+                            <span class="inline-flex items-center gap-1.5 text-[10px] text-red-400 bg-red-500/10 px-2 py-1 rounded">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                Inactive
+                            </span>
+
+                            {% endif %}
+
+                        </td>                
+                        
+                        {% if request.user.is_superuser %}
+                        <td class="px-4 py-3 align-top">
+                            <div class="grid grid-cols-[64px_88px] justify-end gap-2">
+                                <!-- EDIT -->
+                                <a href="{% url 'billing:edit_client' customer.pk %}"
+                                class="w-16 inline-flex items-center justify-center px-2 py-2 rounded-md border border-blue-500/20 bg-blue-500/10 text-blue-400 text-[10px] hover:bg-blue-500/20 transition">
+                                    Edit
+                                </a>
+
+                                <!-- ACTIVATE / DEACTIVATE -->
+                                <form method="POST"
+                                    action="{% url 'billing:toggle_client_status' customer.pk %}"
+                                    onsubmit="return confirm('{% if customer.is_active %}Deactivate{% else %}Reactivate{% endif %} {{ customer.customer_id }}?');">
+                                    {% csrf_token %}
+                                    
+                                    <input type="hidden" name="return_to" value="clients">
+                                    {% if customer.is_active %}
+                                        <button type="submit"
+                                                class="w-[88px] inline-flex items-center justify-center px-2 py-2 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-400 text-[10px] hover:bg-amber-500/20 transition">
+                                            Deactivate
+                                        </button>
+                                    {% else %}
+                                        <button type="submit"
+                                                class="w-[88px] inline-flex items-center justify-center px-2 py-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] hover:bg-emerald-500/20 transition">
+                                            Activate
+                                        </button>
+                                    {% endif %}
+                                </form>
+
+                            </div>
+                        </td>
+                        {% endif %}
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td {% if request.user.is_superuser %}7{% else %}6{% endif %} class="px-4 py-12 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <svg class="w-8 h-8 text-slate-600 mb-2"
+                                     fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8" stroke-width="1.5"/>
+                                    <path stroke-linecap="round" stroke-width="1.5"
+                                          d="m16.5 16.5 4 4"/>
+                                </svg>
+
+                                <p class="text-xs text-white font-medium">
+                                    No clients found
+                                </p>
+
+                                <p class="text-[10px] text-slate-500 mt-1">
+                                    Try changing your search or filters.
+                                </p>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- PAGINATION -->
+        {% if page_obj.paginator.num_pages > 1 %}
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-800">
+
+            <p class="text-[10px] text-slate-500">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </p>
+
+            <div class="flex items-center gap-1.5">
+
+                {% if page_obj.has_previous %}
+
+                <a href="?q={{ search_query|urlencode }}&type={{ selected_type|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.previous_page_number }}"
+                   class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+                    Previous
+                </a>
+
+                {% else %}
+
+                <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+                    Previous
+                </span>
+
+                {% endif %}
+
+                <span class="px-3 py-1.5 rounded-md bg-blue-600/15 border border-blue-500/20 text-blue-400 text-[10px]">
+                    {{ page_obj.number }}
+                </span>
+
+                {% if page_obj.has_next %}
+
+                <a href="?q={{ search_query|urlencode }}&type={{ selected_type|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.next_page_number }}"
+                   class="px-3 py-1.5 rounded-md border border-slate-700 text-[10px] text-slate-300 hover:bg-slate-800">
+                    Next
+                </a>
+
+                {% else %}
+
+                <span class="px-3 py-1.5 rounded-md border border-slate-800 text-[10px] text-slate-600">
+                    Next
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

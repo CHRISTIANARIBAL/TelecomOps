@@ -1,0 +1,392 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}TelecomOps Admin{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="h-screen overflow-hidden bg-[#080d19] text-slate-100 antialiased text-sm">
+
+<div class="h-screen overflow-hidden flex">
+
+    <!-- SIDEBAR -->
+    <aside id="adminSidebar"
+        class="fixed inset-y-0 left-0 z-50 flex w-56 shrink-0 flex-col
+        bg-[#0c1424] border-r border-slate-800 -translate-x-full
+        transition-transform duration-300 overflow-y-auto
+        lg:static lg:translate-x-0 lg:overflow-y-visible">
+
+        <!-- BRAND -->
+        <div class="h-16 flex items-center gap-2.5 px-5 border-b border-slate-800">
+
+            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+                <span class="font-bold text-lg">T</span>
+            </div>
+
+            <div>
+                <h1 class="font-bold text-base tracking-wide">TelecomOps</h1>
+                <p class="text-[9px] text-slate-500 tracking-widest">
+                    ADMINISTRATION SYSTEM
+                </p>
+            </div>
+
+        </div>
+
+        <!-- NAVIGATION -->
+        <nav class="flex-1 px-3 py-5 space-y-5">
+
+            <!-- WORKSPACE -->
+            <div>
+
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                    WORKSPACE
+                </p>
+
+                <a href="{% url 'admin_dashboard' %}"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition
+                    {% if active_page == 'admin_dashboard' %}
+                        bg-blue-600/15 border border-blue-500/20 text-blue-400
+                    {% else %}
+                        text-slate-400 hover:bg-slate-800/60 hover:text-white
+                    {% endif %}">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">Dashboard</span>
+                </a>
+
+            </div>
+
+            <!-- USER MANAGEMENT -->
+            <div>
+
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                    USER MANAGEMENT
+                </p>
+                
+                {% if request.user.is_superuser and request.user.role == 'super_admin' %}
+
+                <a href="{% url 'user_accounts' %}"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition
+                    {% if active_page == 'user_accounts' %}
+                        bg-blue-600/15 border border-blue-500/20 text-blue-400
+                    {% else %}
+                        text-slate-400 hover:bg-slate-800/60 hover:text-white
+                    {% endif %}">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m12-13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm4 13v-2a4 4 0 0 0-3-3.87"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">User Accounts</span>
+                </a>
+
+                {% endif %}
+
+
+                {% if request.user.is_superuser and request.user.role == 'super_admin' %}
+
+                    <a href="{% url 'registration_approvals' %}"
+                        class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition
+                        {% if active_page == 'registration_approvals' %}
+                            bg-blue-600/15 border border-blue-500/20 text-blue-400
+                        {% else %}
+                            text-slate-400 hover:bg-slate-800/60 hover:text-white
+                        {% endif %}">
+
+                        <svg class="w-4 h-4 shrink-0" fill="none"
+                            stroke="currentColor" stroke-width="1.7"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m5-5v7a8 8 0 1 1-16 0V5l8-3 8 3Z"/>
+                        </svg>
+
+                        <span class="text-xs font-semibold">Registration Approvals</span>
+                    </a>
+
+                {% endif %}
+
+                <a href="#"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="3"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M5 20a7 7 0 0 1 14 0M19 8h3m-1.5-1.5v3"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">Roles & Permissions</span>
+                </a>
+
+            </div>
+
+            <!-- BUSINESS MANAGEMENT -->
+            <div>
+
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                    BUSINESS MANAGEMENT
+                </p>
+
+                <a href="#"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">Organization</span>
+                </a>
+
+            </div>
+
+            <!-- SYSTEM MANAGEMENT -->
+            <div>
+
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                    SYSTEM MANAGEMENT
+                </p>
+
+                <a href="#"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m19.4 15 .1.1a2 2 0 1 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4v.3a2 2 0 1 1-4 0v-.2a2 2 0 0 0-3.4-1.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 12h-.2a2 2 0 1 1 0-4h.2A2 2 0 0 0 3 4.6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A2 2 0 0 0 9.2.4V.2a2 2 0 1 1 4 0v.2a2 2 0 0 0 3.4 1.4l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a2 2 0 0 0 1.4 3.4h.3a2 2 0 1 1 0 4h-.2a2 2 0 0 0-1.6 3Z"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">System Settings</span>
+                </a>
+
+                <a href="#"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">Audit Logs</span>
+                </a>
+
+                <a href="#"
+                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+
+                    <svg class="w-4 h-4 shrink-0" fill="none"
+                        stroke="currentColor" stroke-width="1.7"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3 4 6v5c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-3Z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m9 12 2 2 4-4"/>
+                    </svg>
+
+                    <span class="text-xs font-semibold">Security</span>
+                </a>
+
+            </div>
+
+        </nav>
+
+        <!-- SIDEBAR FOOTER -->
+        <div class="p-3 border-t border-slate-800">
+            <div class="rounded-lg bg-[#111c30] p-2.5">
+                <p class="text-[11px] font-semibold text-slate-300">
+                    TelecomOps System
+                </p>
+                <p class="text-[9px] text-slate-500 mt-1">
+                    Centralized Administration
+                </p>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 min-w-0 h-screen min-h-0 flex flex-col overflow-hidden">
+
+        <!-- TOP NAVBAR -->
+        <header class="h-16 shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-slate-800 bg-[#0c1424]/80">
+
+            <!-- MOBILE MENU BUTTON -->
+            <button
+                type="button"
+                id="adminMenuButton"
+                class="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition"
+                aria-label="Open navigation menu"
+                aria-controls="adminSidebar"
+                aria-expanded="false">
+
+                <svg class="w-5 h-5" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24"
+                    stroke-width="2" stroke-linecap="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
+            <div>
+                <p class="text-[9px] text-slate-500 tracking-widest">
+                    TELECOMOPS / ADMINISTRATION / {% block breadcrumb %}OVERVIEW{% endblock %}
+                </p>
+
+                <h2 class="text-base font-semibold mt-0.5">
+                    {% block page_title %}Dashboard{% endblock %}
+                </h2>
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <!-- NOTIFICATIONS -->
+                <button type="button"
+                    class="relative p-1.5 text-slate-400 hover:text-white"
+                    aria-label="Notifications">
+
+                    <svg class="w-4 h-4" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/>
+                    </svg>
+                </button>
+
+                <div class="h-7 w-px bg-slate-800"></div>
+
+                <!-- USER INFORMATION -->
+                <div class="flex items-center gap-2.5">
+
+                    <div class="hidden sm:block text-right">
+                        <p class="text-xs font-medium">
+                            {{ request.user.username }}
+                        </p>
+
+                        <p class="text-[10px] text-slate-500">
+                            {{ request.user.get_role_display }}
+                        </p>
+                    </div>
+
+                    <div class="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold">
+                        {{ request.user.username|first|upper }}
+                    </div>
+
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+
+                        <button type="submit"
+                            class="text-[11px] text-slate-400 hover:text-red-400 transition">
+                            Sign out
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 sm:p-6">
+
+            <div class="max-w-7xl mx-auto">
+
+                {% block content %}
+                {% endblock %}
+
+            </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="px-4 sm:px-6 py-3 border-t border-slate-800 flex flex-col sm:flex-row justify-between gap-1.5">
+
+            <p class="text-[10px] text-slate-600">
+                © {% now "Y" %} TelecomOps. All rights reserved.
+            </p>
+
+            <p class="text-[10px] text-slate-600">
+                System Administration
+            </p>
+
+        </footer>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const menuButton = document.getElementById("adminMenuButton");
+    const sidebar = document.getElementById("adminSidebar");
+
+    if (!menuButton || !sidebar) return;
+
+    function openSidebar() {
+        sidebar.classList.remove("-translate-x-full");
+        menuButton.setAttribute("aria-expanded", "true");
+        menuButton.setAttribute("aria-label", "Close navigation menu");
+    }
+
+    function closeSidebar() {
+        sidebar.classList.add("-translate-x-full");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Open navigation menu");
+    }
+
+    menuButton.addEventListener("click", function () {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+
+        if (isOpen) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    sidebar.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (window.innerWidth < 1024) {
+                closeSidebar();
+            }
+        });
+    });
+
+    window.addEventListener("resize", function () {
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove("-translate-x-full");
+            menuButton.setAttribute("aria-expanded", "false");
+        } else {
+            closeSidebar();
+        }
+    });
+});
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

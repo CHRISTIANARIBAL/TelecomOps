@@ -1,0 +1,234 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit Plan | TelecomOps{% endblock %}
+{% block breadcrumb %}BILLING / PLANS / EDIT PLAN{% endblock %}
+{% block page_title %}Edit Internet Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-input {
+        width: 100%;
+        background: #080d19;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        padding: 10px 12px;
+        color: #e2e8f0;
+        font-size: 12px;
+        outline: none;
+    }
+
+    .form-input:focus {
+        border-color: #3b82f6;
+    }
+
+    .form-input::placeholder {
+        color: #64748b;
+    }
+
+    select.form-input {
+        color-scheme: dark;
+    }
+
+    textarea.form-input {
+        resize: vertical;
+    }
+
+    .field-error {
+        color: #f87171;
+        font-size: 10px;
+        margin-top: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl space-y-4">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between gap-3">
+        <div>
+            <h2 class="text-lg font-semibold text-white">
+                Update Internet Plan
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">
+                Modify the package information, bandwidth, and pricing.
+            </p>
+        </div>
+
+        <a href="{% url 'billing:plans' %}"
+           class="text-xs text-slate-400 hover:text-white transition">
+            ← Back to Plans
+        </a>
+    </div>
+
+    <!-- FORM ERRORS -->
+    {% if form.non_field_errors %}
+    <div class="rounded-lg border border-red-500/20 bg-red-500/10 p-3">
+        {% for error in form.non_field_errors %}
+        <p class="text-xs text-red-400">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="space-y-3">
+        {% csrf_token %}
+
+        <!-- PLAN INFORMATION -->
+        <section class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Plan Information
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                    Basic package identification
+                </p>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                {% for field in form %}
+                    {% if field.name == "plan_name" or field.name == "service_type" or field.name == "description" %}
+                    <div class="{% if field.name == 'description' %}sm:col-span-2{% endif %}">
+
+                        <label for="{{ field.id_for_label }}"
+                               class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="text-red-400">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- BANDWIDTH CONFIGURATION -->
+        <section class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Bandwidth Configuration
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                    Configure committed and burst speeds in Mbps
+                </p>
+            </div>
+
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                {% for field in form %}
+                    {% if field.name == "download_speed" or field.name == "upload_speed" or field.name == "burst_download_speed" or field.name == "burst_upload_speed" %}
+                    <div>
+
+                        <label for="{{ field.id_for_label }}"
+                               class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="text-red-400">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+
+            <div class="px-4 py-3 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white">
+                    Pricing Configuration
+                </h3>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                    Set the monthly subscription price
+                </p>
+            </div>
+
+            <div class="p-4">
+                {% for field in form %}
+                    {% if field.name == "monthly_price" %}
+                    <div class="max-w-md">
+
+                        <label for="{{ field.id_for_label }}"
+                               class="block text-[11px] font-medium text-slate-400 mb-1.5">
+                            {{ field.label }}
+                            <span class="text-red-400">*</span>
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        </section>
+
+        <!-- PLAN STATUS -->
+        <section class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-xs font-semibold text-white">
+                        Plan Status
+                    </h3>
+                    <p class="text-[10px] text-slate-500 mt-1">
+                        Determine whether this plan is available for new subscriptions.
+                    </p>
+                </div>
+
+                <label for="{{ form.is_active.id_for_label }}"
+                       class="flex items-center gap-2 text-xs text-slate-300">
+                    {{ form.is_active }}
+                    Active Plan
+                </label>
+            </div>
+
+            {% for error in form.is_active.errors %}
+            <p class="field-error">{{ error }}</p>
+            {% endfor %}
+
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="flex justify-end items-center gap-2 py-2">
+
+            <a href="{% url 'billing:plans' %}"
+               class="px-4 py-2 rounded-md border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 transition">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="px-4 py-2 rounded-md bg-blue-600 text-xs font-semibold text-white hover:bg-blue-500 transition">
+                Update Plan
+            </button>
+
+        </div>
+
+    </form>
+</div>
+{% endblock %}
