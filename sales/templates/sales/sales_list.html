@@ -25,7 +25,7 @@
     </div>
 
     <!-- SALES SEARCH AND FILTERS -->
-    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-4">
+    <div class="bg-white border border-slate-800 rounded-lg p-4">
 
         <form method="GET" class="space-y-3">
 
@@ -46,7 +46,7 @@
 
                     <button
                         type="submit"
-                        class="px-4 py-2.5 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                        class="px-4 py-2.5 rounded-md bg-white text-white text-xs font-semibold hover:bg-[#F2F3F5] border border-slate-700 transition">
                         Search
                     </button>
                 </div>
@@ -110,7 +110,7 @@
                         type="date"
                         name="date_from"
                         value="{{ date_from }}"
-                        style="color-scheme: dark;"
+                        style="color-scheme: light;"
                         class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
                     >
                 </div>
@@ -126,7 +126,7 @@
                         name="date_to"
                         value="{{ date_to }}"
                         min="{{ date_from }}"
-                        style="color-scheme: dark;"
+                        style="color-scheme: light;"
                         class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
                     >
                 </div>
@@ -138,13 +138,13 @@
 
                 <a
                     href="{% url 'sales:sales_list' %}"
-                    class="px-4 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                    class="px-4 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-[#F2F3F5] transition">
                     Reset
                 </a>
 
                 <button
                     type="submit"
-                    class="px-4 py-2 rounded-md bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition">
+                    class="px-4 py-2 rounded-md bg-white text-white text-xs border border-slate-700 hover:bg-[#F2F3F5] transition">
                     Apply Filters
                 </button>
 
@@ -154,12 +154,12 @@
     </div>
 
     <!-- SALES TABLE -->
-    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+    <div class="bg-white border border-slate-800 rounded-lg overflow-hidden">
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs whitespace-nowrap">
 
-                <thead class="bg-[#0c1424] text-slate-400 uppercase tracking-wider">
+                <thead class="bg-[#F0F2F5] text-slate-400 uppercase tracking-wider">
                     <tr>
                         <th class="px-4 py-3 font-semibold">Transaction</th>
                         <th class="px-4 py-3 font-semibold">Buyer</th>
@@ -176,7 +176,7 @@
                 <tbody class="divide-y divide-slate-800">
 
                     {% for sale in sales %}
-                    <tr class="hover:bg-slate-800/40 transition">
+                    <tr class="hover:bg-[#F2F3F5] transition">
 
                         <td class="px-4 py-3 font-semibold">
                             <a href="{% url 'sales:sale_detail' sale.pk %}"

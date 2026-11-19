@@ -44,7 +44,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
 
         <!-- TOTAL PRODUCTS -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="bg-white border border-slate-800 rounded-lg p-3.5">
 
             <p class="text-xs text-slate-400">
                 Total Products
@@ -62,7 +62,7 @@
 
 
         <!-- ACTIVE PRODUCTS -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="bg-white border border-slate-800 rounded-lg p-3.5">
 
             <p class="text-xs text-slate-400">
                 Active Products
@@ -80,7 +80,7 @@
 
 
         <!-- INACTIVE PRODUCTS -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="bg-white border border-slate-800 rounded-lg p-3.5">
 
             <p class="text-xs text-slate-400">
                 Inactive Products
@@ -96,7 +96,7 @@
 
         </div>
                     <!-- UNAVAILABLE PRODUCTS -->
-            <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+            <div class="bg-white border border-slate-800 rounded-lg p-3.5">
 
                 <p class="text-xs text-slate-400">
                     Unavailable Products
@@ -116,7 +116,7 @@
 
 
     <!-- SEARCH AND FILTERS -->
-    <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+    <div class="bg-white border border-slate-800 rounded-lg p-3.5">
 
         <form method="GET"
               class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
@@ -152,7 +152,7 @@
 
                     <button
                         type="submit"
-                        class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded bg-blue-600 text-white text-[11px] font-semibold hover:bg-blue-500 transition">
+                        class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded bg-white text-white text-[11px] font-semibold hover:bg-[#F2F3F5] transition">
 
                         Search
 
@@ -233,7 +233,7 @@
 
                 <!-- INACTIVE PRODUCTS -->
                 <a href="{% url 'inventory:products' %}?status=inactive"
-                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-amber-500/20 bg-amber-500/10 text-amber-400 text-xs font-semibold hover:bg-amber-500/20 transition">
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-slate-700 bg-white hover:bg-[#F2F3F5] text-xs font-semibold hover:bg[#F2F3F5] transition">
 
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
 
@@ -244,15 +244,15 @@
 
                 <!-- ACTIVE PRODUCTS -->
                 <a href="{% url 'inventory:products' %}?status=active"
-                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-slate-700 bg-white hover:bg-[#F2F3F5] text-xs font-semibold transition">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400 hover:bg-slate-800"></span>
                     Active Products
                 </a>
 
 
                 <!-- ADD PRODUCT -->
                 <a href="{% url 'inventory:add_product' %}"
-                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition">
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-white text-xs font-semibold border border-slate-700 bg-white hover:bg-[#F2F3F5] transition">
 
                     <svg class="w-3.5 h-3.5"
                          fill="none"
@@ -273,25 +273,20 @@
 
                 <!-- RESET -->
                 <a href="{% url 'inventory:products' %}?status="
-                    class="px-3 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                    class="px-3 py-2 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-[#F2F3F5] transition">
 
                         Reset
-
                 </a>
-
             </div>
-
         </form>
-
     </div>
 
-
     <!-- PRODUCT DIRECTORY -->
-    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+    <div class="bg-salte-800 border border-slate-800 rounded-lg overflow-hidden">
 
 
         <!-- TABLE HEADER -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-b border-slate-800">
+        <div class="flex flex-col bg-white sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-b border-slate-800">
 
             <div>
 
@@ -325,16 +320,11 @@
 
         </div>
 
-
         <!-- PRODUCT TABLE -->
         <div class="overflow-x-auto">
-
             <table class="w-full text-xs text-left whitespace-nowrap">
-
-                <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/50">
-
+                <thead class="text-[10px] text-slate-500 uppercase bg-[#F0F2F5]">
                     <tr>
-
                         <th class="px-4 py-2.5 font-semibold">
                             SKU
                         </th>
@@ -384,7 +374,7 @@
 
                     {% for product in products %}
 
-                    <tr class="{% cycle 'bg-[#111c30]' 'bg-[#0e192b]' %} hover:bg-slate-800/60 transition">
+                    <tr class="{% cycle 'bg-white' 'bg-[#0e192b]' %} hover:bg-[#F2F3F5] transition">
 
 
                         <!-- SKU -->

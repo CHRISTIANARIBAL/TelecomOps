@@ -458,8 +458,8 @@ def add_plan(request):
 
 @login_required
 def edit_plan(request, pk):
-    if not request.user.is_superuser:
-        raise PermissionDenied
+    # if not request.user.is_superuser:
+    #     raise PermissionDenied
 
     if request.session.get("password_recovery_pending"):
         return redirect("password_recovery_choice")

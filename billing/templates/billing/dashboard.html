@@ -6,19 +6,52 @@
 {% block page_title %}Billing Dashboard{% endblock %}
 
 {% block content %}
+<style>
+    /* TelecomOps billing dashboard palette: charcoal, maroon, crimson and gold */
+    .billing-panel {
+        background: linear-gradient(145deg, #251922 0%, #1D151D 100%);
+        border: 1px solid #49313A;
+        box-shadow: 0 8px 24px rgba(20, 7, 13, .14);
+    }
+    .billing-panel-accent {
+        border-top: 2px solid rgba(214, 166, 75, .72);
+    }
+    .billing-kpi-icon {
+        color: #D6A64B;
+    }
+    .billing-table thead {
+        background: rgba(115, 31, 48, .18);
+    }
+    .billing-table tbody tr {
+        transition: background-color .18s ease;
+    }
+    .billing-table tbody tr:hover {
+        background: rgba(163, 38, 58, .10);
+    }
+    .billing-section-heading {
+        color: #F7EDEF;
+    }
+    .billing-muted {
+        color: #C2ADB2;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .billing-table tbody tr { transition: none; }
+    }
+</style>
+
 <div class="space-y-4">
 
     <!-- Dashboard Introduction -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
             <h2 class="text-lg font-semibold text-white">Billing Overview</h2>
-            <p class="text-xs text-slate-400 mt-0.5">
+            <p class="text-xs text-[#C2ADB2] mt-0.5">
                 Monitor customers, subscriptions, collections, and outstanding balances.
             </p>
         </div>
 
-        <div class="inline-flex items-center gap-2 w-fit text-[10px] text-slate-400 bg-slate-800/70 border border-slate-700 rounded-md px-2.5 py-1.5">
-            <span class="text-emerald-400">●</span>
+        <div class="inline-flex items-center gap-2 w-fit text-[10px] text-[#C2ADB2] bg-[#321D27]/80 border border-[#62404A] rounded-md px-2.5 py-1.5">
+            <span class="text-[#D6A64B]">●</span>
             Live database statistics
         </div>
     </div>
@@ -27,12 +60,12 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
 
         <!-- Total Customers -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="billing-panel billing-panel-accent rounded-xl p-3.5">
             <div class="flex items-center justify-between">
-                <p class="text-xs text-slate-400">Total Customers</p>
-                <span class="text-blue-400 text-base">♙</span>
+                <p class="text-xs text-[#C2ADB2]">Total Customers</p>
+                <span class="text-[#D6A64B] text-base">♙</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mt-2">
+            <h3 class="text-2xl font-bold text-[#FFF7F0] mt-2">
                 {{ total_customers }}
             </h3>
             <p class="text-[10px] text-emerald-400 mt-1">
@@ -41,40 +74,40 @@
         </div>
 
         <!-- Active Subscriptions -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="billing-panel billing-panel-accent rounded-xl p-3.5">
             <div class="flex items-center justify-between">
-                <p class="text-xs text-slate-400">Active Subscriptions</p>
+                <p class="text-xs text-[#C2ADB2]">Active Subscriptions</p>
                 <span class="text-emerald-400 text-base">◉</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mt-2">
+            <h3 class="text-2xl font-bold text-[#FFF7F0] mt-2">
                 {{ active_subscriptions }}
             </h3>
-            <p class="text-[10px] text-slate-400 mt-1">
+            <p class="text-[10px] text-[#C2ADB2] mt-1">
                 {{ total_subscriptions }} total subscriptions
             </p>
         </div>
 
         <!-- Monthly Collections -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="billing-panel billing-panel-accent rounded-xl p-3.5">
             <div class="flex items-center justify-between">
-                <p class="text-xs text-slate-400">Monthly Collections</p>
+                <p class="text-xs text-[#C2ADB2]">Monthly Collections</p>
                 <span class="text-emerald-400 text-base">₱</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mt-2">
+            <h3 class="text-2xl font-bold text-[#FFF7F0] mt-2">
                 ₱{{ monthly_collections|floatformat:2 }}
             </h3>
-            <p class="text-[10px] text-slate-400 mt-1">
+            <p class="text-[10px] text-[#C2ADB2] mt-1">
                 Completed payments this month
             </p>
         </div>
 
         <!-- Outstanding Balance -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg p-3.5">
+        <div class="billing-panel billing-panel-accent rounded-xl p-3.5">
             <div class="flex items-center justify-between">
-                <p class="text-xs text-slate-400">Outstanding Balance</p>
-                <span class="text-amber-400 text-base">₱</span>
+                <p class="text-xs text-[#C2ADB2]">Outstanding Balance</p>
+                <span class="text-[#D6A64B] text-base">₱</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mt-2">
+            <h3 class="text-2xl font-bold text-[#FFF7F0] mt-2">
                 ₱{{ outstanding_balance|floatformat:2 }}
             </h3>
             <p class="text-[10px] text-amber-400 mt-1">
@@ -87,29 +120,29 @@
     <!-- Secondary Statistics -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
-            <p class="text-[11px] text-slate-400">Suspended Subscriptions</p>
+        <div class="billing-panel rounded-xl px-3.5 py-3">
+            <p class="text-[11px] text-[#C2ADB2]">Suspended Subscriptions</p>
             <p class="text-xl font-semibold text-red-400 mt-1">
                 {{ suspended_subscriptions }}
             </p>
         </div>
 
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
-            <p class="text-[11px] text-slate-400">Pending Subscriptions</p>
+        <div class="billing-panel rounded-xl px-3.5 py-3">
+            <p class="text-[11px] text-[#C2ADB2]">Pending Subscriptions</p>
             <p class="text-xl font-semibold text-amber-400 mt-1">
                 {{ pending_subscriptions }}
             </p>
         </div>
 
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
-            <p class="text-[11px] text-slate-400">Overdue Invoices</p>
+        <div class="billing-panel rounded-xl px-3.5 py-3">
+            <p class="text-[11px] text-[#C2ADB2]">Overdue Invoices</p>
             <p class="text-xl font-semibold text-red-400 mt-1">
                 {{ overdue_invoices }}
             </p>
         </div>
 
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg px-3.5 py-3">
-            <p class="text-[11px] text-slate-400">Unpaid Invoices</p>
+        <div class="billing-panel rounded-xl px-3.5 py-3">
+            <p class="text-[11px] text-[#C2ADB2]">Unpaid Invoices</p>
             <p class="text-xl font-semibold text-amber-400 mt-1">
                 {{ unpaid_invoices }}
             </p>
@@ -121,22 +154,22 @@
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
 
         <!-- Recent Payments -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+        <div class="billing-panel rounded-xl overflow-hidden">
 
-            <div class="flex justify-between items-center px-4 py-3 border-b border-slate-800">
+            <div class="flex justify-between items-center px-4 py-3 border-b border-[#49313A]">
                 <div>
-                    <h3 class="text-sm font-semibold text-white">Recent Payments</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">
+                    <h3 class="text-sm font-semibold text-[#FFF7F0]">Recent Payments</h3>
+                    <p class="text-[10px] text-[#C2ADB2] mt-0.5">
                         Latest customer transactions
                     </p>
                 </div>
-                <span class="text-[10px] text-slate-500">Last 5 records</span>
+                <span class="text-[10px] text-[#B39DA3]">Last 5 records</span>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left">
+                <table class="billing-table w-full text-xs text-left">
 
-                    <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/40">
+                    <thead class="text-[10px] text-[#D6A64B] uppercase bg-[#321D27]/70 tracking-wider">
                         <tr>
                             <th class="px-4 py-2.5">Payment</th>
                             <th class="px-4 py-2.5">Customer</th>
@@ -145,23 +178,23 @@
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-[#49313A]">
 
                         {% for payment in recent_payments %}
-                        <tr class="hover:bg-slate-800/40 transition">
+                        <tr class="hover:bg-[#3A202B]/60 transition">
 
-                            <td class="px-4 py-3 text-white font-medium">
+                            <td class="px-4 py-3 text-[#F7EDEF] font-medium">
                                 {{ payment.payment_number }}
-                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                <p class="text-[10px] text-[#B39DA3] mt-0.5">
                                     {{ payment.payment_date|date:"M d, Y" }}
                                 </p>
                             </td>
 
-                            <td class="px-4 py-3 text-slate-300">
+                            <td class="px-4 py-3 text-[#E1D3D5]">
                                 {{ payment.customer }}
                             </td>
 
-                            <td class="px-4 py-3 text-white font-medium whitespace-nowrap">
+                            <td class="px-4 py-3 text-[#F7EDEF] font-medium whitespace-nowrap">
                                 ₱{{ payment.amount|floatformat:2 }}
                             </td>
 
@@ -170,7 +203,7 @@
                                     {% if payment.status == 'COMPLETED' %}bg-emerald-500/10 text-emerald-400
                                     {% elif payment.status == 'PENDING' %}bg-amber-500/10 text-amber-400
                                     {% elif payment.status == 'REVERSED' or payment.status == 'FAILED' %}bg-red-500/10 text-red-400
-                                    {% else %}bg-slate-700 text-slate-300{% endif %}">
+                                    {% else %}bg-[#49313A] text-[#E1D3D5]{% endif %}">
                                     {{ payment.get_status_display }}
                                 </span>
                             </td>
@@ -179,7 +212,7 @@
 
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="px-4 py-8 text-center text-slate-500 text-xs">
+                            <td colspan="4" class="px-4 py-8 text-center text-[#B39DA3] text-xs">
                                 No payment records available.
                             </td>
                         </tr>
@@ -191,22 +224,22 @@
         </div>
 
         <!-- Recent Invoices -->
-        <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+        <div class="billing-panel rounded-xl overflow-hidden">
 
-            <div class="flex justify-between items-center px-4 py-3 border-b border-slate-800">
+            <div class="flex justify-between items-center px-4 py-3 border-b border-[#49313A]">
                 <div>
-                    <h3 class="text-sm font-semibold text-white">Recent Invoices</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">
+                    <h3 class="text-sm font-semibold text-[#FFF7F0]">Recent Invoices</h3>
+                    <p class="text-[10px] text-[#C2ADB2] mt-0.5">
                         Latest generated invoices
                     </p>
                 </div>
-                <span class="text-[10px] text-slate-500">Last 5 records</span>
+                <span class="text-[10px] text-[#B39DA3]">Last 5 records</span>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left">
+                <table class="billing-table w-full text-xs text-left">
 
-                    <thead class="text-[10px] text-slate-500 uppercase bg-slate-900/40">
+                    <thead class="text-[10px] text-[#D6A64B] uppercase bg-[#321D27]/70 tracking-wider">
                         <tr>
                             <th class="px-4 py-2.5">Invoice</th>
                             <th class="px-4 py-2.5">Customer</th>
@@ -215,23 +248,23 @@
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-[#49313A]">
 
                         {% for invoice in recent_invoices %}
-                        <tr class="hover:bg-slate-800/40 transition">
+                        <tr class="hover:bg-[#3A202B]/60 transition">
 
-                            <td class="px-4 py-3 text-white font-medium">
+                            <td class="px-4 py-3 text-[#F7EDEF] font-medium">
                                 {{ invoice.invoice_number }}
-                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                <p class="text-[10px] text-[#B39DA3] mt-0.5">
                                     Due {{ invoice.due_date|date:"M d, Y" }}
                                 </p>
                             </td>
 
-                            <td class="px-4 py-3 text-slate-300">
+                            <td class="px-4 py-3 text-[#E1D3D5]">
                                 {{ invoice.customer }}
                             </td>
 
-                            <td class="px-4 py-3 text-white font-medium whitespace-nowrap">
+                            <td class="px-4 py-3 text-[#F7EDEF] font-medium whitespace-nowrap">
                                 ₱{{ invoice.total_amount|floatformat:2 }}
                             </td>
 
@@ -239,7 +272,7 @@
                                 <span class="text-[10px] px-2 py-1 rounded
                                     {% if invoice.status == 'PAID' %}bg-emerald-500/10 text-emerald-400
                                     {% elif invoice.status == 'OVERDUE' or invoice.status == 'VOID' %}bg-red-500/10 text-red-400
-                                    {% elif invoice.status == 'DRAFT' %}bg-slate-700 text-slate-300
+                                    {% elif invoice.status == 'DRAFT' %}bg-[#49313A] text-[#E1D3D5]
                                     {% else %}bg-amber-500/10 text-amber-400{% endif %}">
                                     {{ invoice.get_status_display }}
                                 </span>
@@ -249,7 +282,7 @@
 
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="px-4 py-8 text-center text-slate-500 text-xs">
+                            <td colspan="4" class="px-4 py-8 text-center text-[#B39DA3] text-xs">
                                 No invoice records available.
                             </td>
                         </tr>
@@ -263,28 +296,28 @@
     </div>
 
     <!-- Recent Billing Activities -->
-    <div class="bg-[#111c30] border border-slate-800 rounded-lg overflow-hidden">
+    <div class="billing-panel rounded-xl overflow-hidden">
 
-        <div class="px-4 py-3 border-b border-slate-800">
-            <h3 class="text-sm font-semibold text-white">
+        <div class="px-4 py-3 border-b border-[#49313A]">
+            <h3 class="text-sm font-semibold text-[#FFF7F0]">
                 Recent Billing Activities
             </h3>
-            <p class="text-[10px] text-slate-400 mt-0.5">
+            <p class="text-[10px] text-[#C2ADB2] mt-0.5">
                 Latest recorded billing operations
             </p>
         </div>
 
-        <div class="divide-y divide-slate-800">
+        <div class="divide-y divide-[#49313A]">
 
             {% for activity in recent_activities %}
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 px-4 py-3 hover:bg-slate-800/30">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 px-4 py-3 hover:bg-[#3A202B]/45">
 
                 <div>
-                    <p class="text-xs text-white font-medium">
+                    <p class="text-xs text-[#F7EDEF] font-medium">
                         {{ activity.get_action_display }}
                     </p>
 
-                    <p class="text-[10px] text-slate-400 mt-0.5">
+                    <p class="text-[10px] text-[#C2ADB2] mt-0.5">
                         {% if activity.customer %}
                             {{ activity.customer }}
                         {% else %}
@@ -297,14 +330,14 @@
                     </p>
                 </div>
 
-                <p class="text-[10px] text-slate-500">
+                <p class="text-[10px] text-[#B39DA3]">
                     {{ activity.created_at|date:"M d, Y · h:i A" }}
                 </p>
 
             </div>
 
             {% empty %}
-            <div class="px-4 py-8 text-center text-slate-500 text-xs">
+            <div class="px-4 py-8 text-center text-[#B39DA3] text-xs">
                 No billing activities recorded yet.
             </div>
             {% endfor %}

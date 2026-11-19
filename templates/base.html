@@ -11,86 +11,331 @@
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <style>
         :root {
-            color-scheme: dark;
-            --ops-crimson: #a9162b;
-            --ops-deep: #16070b;
-            --ops-gold: #d4a62d;
-            --ops-gold-light: #f4d778;
-            --ops-line: rgba(212, 166, 45, .20);
+            color-scheme: light;
+            --brand-maroon: #111111;
+            --brand-crimson: #222222;
+            --brand-crimson-soft: #F2F2F2;
+            --brand-gold: #777777;
+            --brand-gold-soft: #F5F5F5;
+            --ink: #111111;
+            --muted: #555555;
+            --page: #F4F4F4;
+            --surface: #FFFFFF;
+            --line: #DDDDDD;
+            --sidebar: #FFFFFF;
         }
-        html { background: var(--ops-deep); }
+
+        html, body {
+            background: var(--ops-page);
+            color: var(--ops-ink);
+        }
+
         body {
-            background-color: var(--ops-deep);
             background-image:
-                radial-gradient(ellipse at 15% 0%, rgba(169, 22, 43, .20), transparent 38%),
-                radial-gradient(ellipse at 90% 100%, rgba(122, 18, 35, .16), transparent 34%);
+                radial-gradient(ellipse at 12% 0%, rgba(163, 38, 58, .045), transparent 38%),
+                radial-gradient(ellipse at 92% 100%, rgba(201, 154, 61, .055), transparent 34%);
         }
+
+        /* Sidebar: light, calm, and brand-led */
         #mainSidebar {
-            background: linear-gradient(180deg, #2a0a11 0%, #1d080d 58%, #16070b 100%);
-            border-color: var(--ops-line);
-            box-shadow: 12px 0 35px rgba(0,0,0,.18);
-        }
-        #mainSidebar > div:first-child {
-            border-color: var(--ops-line);
-            background: linear-gradient(90deg, rgba(169,22,43,.16), transparent 85%);
-        }
-        #mainSidebar nav { scrollbar-width: thin; scrollbar-color: #71303a transparent; }
-        #mainSidebar nav a, #mainSidebar summary { border: 1px solid transparent; }
-        #mainSidebar nav a:hover, #mainSidebar summary:hover {
-            box-shadow: inset 3px 0 0 rgba(212,166,45,.72);
-        }
-        #mainSidebar nav a[class*="bg-\\[\\#a9162b\\]"],
-        #mainSidebar summary[class*="bg-\\[\\#a9162b\\]"] {
-            box-shadow: inset 3px 0 0 var(--ops-gold), 0 5px 18px rgba(0,0,0,.12);
-        }
-        #mainSidebar nav p { color: #b58b55; }
-        #mainSidebar nav a, #mainSidebar summary { transition: all .2s ease; }
-        #mainSidebar details > summary::-webkit-details-marker { display:none; }
-        #mainSidebar details > div { border-color: rgba(212,166,45,.22); }
-        #mainSidebar > div:last-child { border-color: var(--ops-line); }
-        #mainSidebar > div:last-child > div {
-            border: 1px solid rgba(212,166,45,.18);
-            background: linear-gradient(135deg, rgba(169,22,43,.22), rgba(35,8,14,.88));
-        }
-        header {
-            background: rgba(32, 7, 13, .92) !important;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F1F1F1 100%) !important;
             border-color: var(--ops-line) !important;
-            box-shadow: 0 8px 28px rgba(0,0,0,.16);
+            box-shadow: 10px 0 30px rgba(61, 35, 43, .055);
+            color: var(--ops-ink);
+        }
+
+        #mainSidebar > div:first-child {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F1F1F1 100%);
+            border-color: var(--ops-line) !important;
+        }
+
+        #mainSidebar > div:first-child h1 {
+            color: var(--ops-maroon);
+            letter-spacing: -.025em;
+        }
+
+        #mainSidebar > div:first-child p {
+            color: #9A858B !important;
+        }
+
+        #mainSidebar nav {
+            scrollbar-width: thin;
+            scrollbar-color: #D7C5C8 transparent;
+        }
+
+        #mainSidebar nav p {
+            color: #A18D91 !important;
+        }
+
+        #mainSidebar nav a,
+        #mainSidebar nav summary {
+            color: #74656B;
+            border: 1px solid transparent;
+            transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+
+        #mainSidebar nav a:hover,
+        #mainSidebar nav summary:hover {
+            color: var(--ops-maroon) !important;
+            background: #F8F0EF !important;
+            box-shadow: inset 3px 0 0 rgba(201, 154, 61, .85);
+        }
+
+        /* Active top-level navigation */
+        #mainSidebar nav a[class*="bg-\\[\\#a9162b\\]"],
+        #mainSidebar nav summary[class*="bg-\\[\\#a9162b\\]"] {
+            color: var(--ops-maroon) !important;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F1F1F1 100%) !important;
+            border-color: #EBD5D8 !important;
+            box-shadow: inset 3px 0 0 var(--ops-gold), 0 3px 10px rgba(111, 29, 53, .045);
+        }
+
+        #mainSidebar nav a[class*="bg-blue-600"],
+        #mainSidebar nav a[class*="text-\\[\\#f0c75e\\]"] {
+            color: var(--ops-maroon) !important;
+            background: #F0F0F0 !important;
+        }
+
+        #mainSidebar details > summary::-webkit-details-marker { display: none; }
+        #mainSidebar details > div {
+            border-color: #E7D9D9 !important;
+        }
+
+        #mainSidebar > div:last-child {
+            border-color: var(--ops-line) !important;
+        }
+
+        #mainSidebar > div:last-child > div {
+            border: 1px solid #EBD9D5;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F1F1F1 100%) !important;
+        }
+
+        #mainSidebar > div:last-child p:first-child {
+            color: var(--ops-maroon) !important;
+        }
+
+        #mainSidebar > div:last-child p:last-child {
+            color: #927F84 !important;
+        }
+
+        /* Header and page canvas */
+        header {
+            background: rgba(255, 253, 251, .94) !important;
+            border-color: var(--ops-line) !important;
+            box-shadow: 0 5px 22px rgba(61, 35, 43, .045);
             backdrop-filter: blur(16px);
         }
-        header h2 { color: #fff7e8; letter-spacing: -.02em; }
-        header button:hover { color: var(--ops-gold-light); }
+
+        header h2 { color: var(--ops-maroon) !important; letter-spacing: -.02em; }
+        header p { color: #9A858B !important; }
+        header button { color: #78666D; }
+        header button:hover { color: var(--ops-crimson) !important; }
+
         main {
-            background-image: radial-gradient(ellipse at 50% 0%, rgba(169,22,43,.075), transparent 55%);
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(163, 38, 58, .025), transparent 58%);
             scrollbar-width: thin;
-            scrollbar-color: #71303a transparent;
+            scrollbar-color: #D7C5C8 transparent;
         }
-        main::-webkit-scrollbar, #mainSidebar::-webkit-scrollbar { width: 7px; }
-        main::-webkit-scrollbar-thumb, #mainSidebar::-webkit-scrollbar-thumb {
-            background: #71303a; border-radius: 20px;
+
+        main::-webkit-scrollbar,
+        #mainSidebar::-webkit-scrollbar { width: 7px; }
+
+        main::-webkit-scrollbar-thumb,
+        #mainSidebar::-webkit-scrollbar-thumb {
+            background: #D7C5C8;
+            border-radius: 20px;
         }
-        footer { border-color: var(--ops-line) !important; background: rgba(22,7,11,.55); }
-        button:focus-visible, a:focus-visible, summary:focus-visible {
-            outline: 2px solid var(--ops-gold-light);
+
+        footer {
+            border-color: var(--ops-line) !important;
+            background: rgba(255, 253, 251, .88) !important;
+        }
+
+        footer p { color: #9A898E !important; }
+
+        #mobileMenuButton {
+            border-color: #E5D9D8 !important;
+            color: var(--ops-maroon) !important;
+            background: #FFFDFC;
+        }
+
+        #mobileMenuButton:hover {
+            background: #F0F0F0 !important;
+            color: var(--ops-crimson) !important;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid var(--ops-gold);
             outline-offset: 3px;
         }
-        ::selection { background: rgba(212,166,45,.35); color: #fff; }
+
+        ::selection { background: rgba(201, 154, 61, .28); color: #4A2632; }
+
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
         }
+    
+
+        /* Facebook-inspired light interface */
+        :root {
+            color-scheme: light;
+            --fb-blue: #1877F2;
+            --fb-blue-hover: #166FE5;
+            --fb-page: #F0F2F5;
+            --fb-surface: #FFFFFF;
+            --fb-text: #1C1E21;
+            --fb-muted: #65676B;
+            --fb-border: #DADDE1;
+            --fb-hover: #F2F3F5;
+        }
+
+        html, body { background: var(--fb-page) !important; color: var(--fb-text) !important; }
+        body { background-image: none !important; }
+        body, body * { color: inherit; }
+
+        #mainSidebar,
+        #mainSidebar > div:first-child,
+        #mainSidebar > div:last-child > div,
+        header,
+        footer {
+            background: var(--fb-surface) !important;
+            color: var(--fb-text) !important;
+            border-color: var(--fb-border) !important;
+            box-shadow: none !important;
+        }
+
+        #mainSidebar { border-right: 1px solid var(--fb-border) !important; }
+        #mainSidebar > div:first-child h1,
+        #mainSidebar > div:last-child p:first-child,
+        header h2 {
+            color: var(--fb-text) !important;
+        }
+        #mainSidebar > div:first-child p,
+        #mainSidebar nav p,
+        #mainSidebar > div:last-child p:last-child,
+        header p,
+        footer p {
+            color: var(--fb-muted) !important;
+        }
+
+        #mainSidebar nav a,
+        #mainSidebar nav summary {
+            color: var(--fb-text) !important;
+            border-color: transparent !important;
+            border-radius: 8px;
+        }
+        #mainSidebar nav a:hover,
+        #mainSidebar nav summary:hover {
+            color: var(--fb-text) !important;
+            background: var(--fb-hover) !important;
+            box-shadow: none !important;
+        }
+
+        #mainSidebar nav a[class*="bg-"],
+        #mainSidebar nav summary[class*="bg-"] {
+            background: #E7F3FF !important;
+            color: var(--fb-blue) !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+            font-weight: 600;
+        }
+        #mainSidebar details > div { border-color: var(--fb-border) !important; }
+        #mainSidebar nav { scrollbar-color: #BCC0C4 transparent; }
+
+        header { backdrop-filter: none !important; }
+        header h2 { letter-spacing: normal !important; }
+        header button,
+        #mobileMenuButton {
+            color: var(--fb-text) !important;
+            background: var(--fb-surface) !important;
+            border-color: var(--fb-border) !important;
+        }
+        header button:hover,
+        #mobileMenuButton:hover {
+            background: var(--fb-hover) !important;
+            color: var(--fb-text) !important;
+        }
+
+        main {
+            background: var(--fb-page) !important;
+            background-image: none !important;
+            color: var(--fb-text) !important;
+            scrollbar-color: #BCC0C4 transparent;
+        }
+        main::-webkit-scrollbar-thumb,
+        #mainSidebar::-webkit-scrollbar-thumb {
+            background: #BCC0C4;
+            border-radius: 20px;
+        }
+
+        footer { background: var(--fb-surface) !important; }
+        /* a { color: var(--fb-blue); } */
+        /* a:hover { color: var(--fb-blue-hover); } */
+
+        button,
+        [role="button"] {
+            transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+        }
+        button:focus-visible,
+        a:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid var(--fb-blue);
+            outline-offset: 2px;
+        }
+
+        input, select, textarea {
+            background: #FFFFFF !important;
+            color: var(--fb-text) !important;
+            border: 1px solid var(--fb-border) !important;
+            border-radius: 6px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--fb-blue) !important;
+            outline: 2px solid rgba(24,119,242,.16);
+        }
+        ::placeholder { color: #8A8D91 !important; opacity: 1; }
+        ::selection { background: rgba(24,119,242,.20); color: var(--fb-text); }
+
+        /* Keep the shell's primary action accents Facebook blue, not the old brand colors. */
+        .bg-\[\#a9162b\], .bg-\[\#A9162B\],
+        .bg-\[\#6f1d35\], .bg-\[\#6F1D35\],
+        .bg-\[\#a3263a\], .bg-\[\#A3263A\] {
+            background-color: var(--fb-blue) !important;
+            color: #FFFFFF !important;
+        }
+        .text-\[\#f0c75e\], .text-\[\#e6bd55\],
+        .text-\[\#c99a3d\], .text-\[\#C99A3D\] {
+            color: var(--fb-blue) !important;
+        }
+        .border-\[\#d4a62d\], .border-\[\#C99A3D\] {
+            border-color: var(--fb-border) !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    
     </style>
 
     {% block extra_css %}{% endblock %}
 </head>
 
-<body class="h-screen overflow-hidden bg-[#16070b] text-slate-100 antialiased text-sm">
+<body class="h-screen overflow-hidden bg-[#f0f2f5] text-[#1c1e21] antialiased text-sm">
 
-<div class="h-screen overflow-hidden flex selection:bg-[#d4a62d]/30">
+<div class="h-screen overflow-hidden flex selection:bg-[#1877f2]/20">
 
     <!-- SIDEBAR -->
-    <aside id="mainSidebar" class="fixed inset-y-0 left-0 z-50 flex w-56 shrink-0 flex-col bg-[#26090f] border-r border-[#57202a] -translate-x-full transition-transform duration-300 overflow-y-auto lg:static lg:translate-x-0 lg:overflow-y-visible">
+    <aside id="mainSidebar" class="fixed inset-y-0 left-0 z-50 flex w-56 shrink-0 flex-col bg-[#FFFFFF] border-r border-[#DDDDDD] -translate-x-full transition-transform duration-300 overflow-y-auto lg:static lg:translate-x-0 lg:overflow-y-visible">
         <!-- BRAND -->
-        <div class="h-16 flex items-center gap-2.5 px-5 border-b border-[#57202a]">
+        <div class="h-16 flex items-center gap-2.5 px-5 border-b border-[#DDDDDD]">
 
             <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#e6bd55] to-[#a87920] text-[#2a080d] flex items-center justify-center shadow-lg shadow-[#d4a62d]/20">
                 <span class="font-bold text-lg">T</span>
@@ -98,7 +343,7 @@
 
             <div>
                 <h1 class="font-bold text-base tracking-wide">TelecomOps</h1>
-                <p class="text-[9px] text-slate-500 tracking-widest">
+                <p class="text-[9px] text-black tracking-widest">
                     OPERATIONS SYSTEM
                 </p>
             </div>
@@ -111,7 +356,7 @@
             <!-- WORKSPACE -->
             <div>
 
-                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-black">
                     WORKSPACE
                 </p>
 
@@ -120,7 +365,7 @@
                    {% if active_page == 'dashboard' %}
                        bg-[#a9162b]/20 border border-[#d4a62d]/30 text-[#f0c75e]
                    {% else %}
-                       text-slate-400 hover:bg-[#551522]/70 hover:text-white
+                       text-black hover:bg-[#551522]/70 hover:text-white
                    {% endif %}">
 
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor"
@@ -139,7 +384,7 @@
             <!-- NETWORK OPERATIONS -->
             <div>
 
-                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-black">
                     NETWORK OPERATIONS
                 </p>
 
@@ -149,7 +394,7 @@
                    {% if active_page == 'network_monitoring' %}
                        bg-[#a9162b]/20 border border-[#d4a62d]/30 text-[#f0c75e]
                    {% else %}
-                       text-slate-400 hover:bg-[#551522]/70 hover:text-white
+                       text-black hover:bg-[#551522]/70 hover:text-white
                    {% endif %}">
 
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor"
@@ -165,7 +410,7 @@
                 <!-- BUSINESS OPERATIONS -->
                 <div class="mt-5 mb-2">
 
-                    <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-slate-500">
+                    <p class="px-3 mb-2 text-[9px] font-bold tracking-[0.15em] text-black">
                         BUSINESS OPERATIONS
                     </p>
 
@@ -179,7 +424,7 @@
                         {% if active_page == 'billing' or active_page == 'billing_clients' or active_page == 'billing_plans' %}
                             bg-[#a9162b]/20 border border-[#d4a62d]/30 text-[#f0c75e]
                         {% else %}
-                            text-slate-400 hover:bg-[#551522]/70 hover:text-white
+                            text-black hover:bg-[#551522]/70 hover:text-white
                         {% endif %}">
 
                         <span class="flex items-center gap-2.5">
@@ -205,14 +450,14 @@
                     </summary>
 
                     <!-- BILLING SUBMENU -->
-                    <div class="ml-4 mt-1.5 pl-3 border-l border-slate-700">
+                    <div class="ml-4 mt-1.5 pl-3 border-l space-y-1 border-[#E7D9D9]">
 
                         <a href="{% url 'billing:clients' %}"
                            class="flex items-center gap-2.5 px-3 py-2 rounded-md text-xs transition
                            {% if active_page == 'billing_clients' %}
                                text-[#f0c75e] bg-blue-600/10
                            {% else %}
-                               text-slate-400 hover:text-white hover:bg-[#551522]/70
+                               text-black hover:text-white hover:bg-[#551522]/70
                            {% endif %}">
 
                             <svg class="w-3.5 h-3.5 shrink-0" fill="none"
@@ -231,7 +476,7 @@
                             {% if active_page == 'billing_plans' %}
                                 text-[#f0c75e] bg-blue-600/10
                             {% else %}
-                                text-slate-400 hover:text-white hover:bg-[#551522]/70
+                                text-black hover:text-white hover:bg-[#551522]/70
                             {% endif %}">
 
                                 <svg class="w-3.5 h-3.5 shrink-0"
@@ -252,14 +497,14 @@
 
 
 <!-- INVENTORY DROPDOWN -->
-<details class="group mt-1.5"
+<details class="group mt-1.5 mb-1.5"
     {% if active_page == 'inventory' or active_page == 'inventory_products' or active_page == 'inventory_categories' or active_page == 'inventory_stock' %}open{% endif %}>
 
     <summary class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg cursor-pointer list-none transition
         {% if active_page == 'inventory' or active_page == 'inventory_products' or active_page == 'inventory_categories' or active_page == 'inventory_stock' %}
             bg-[#a9162b]/20 border border-[#d4a62d]/30 text-[#f0c75e]
         {% else %}
-            text-slate-400 hover:bg-[#551522]/70 hover:text-white
+            text-black hover:bg-[#551522]/70 hover:text-white
         {% endif %}">
 
         <span class="flex items-center gap-2.5">
@@ -302,7 +547,7 @@
     </summary>
 
     <!-- INVENTORY SUBMENU -->
-    <div class="ml-4 mt-1.5 pl-3 border-l border-slate-700">
+    <div class="ml-4 mt-1.5 pl-3 space-y-1 border-l border-[#E7D9D9]">
 
         <!-- OVERVIEW -->
         <a href="{% url 'inventory:dashboard' %}"
@@ -310,7 +555,7 @@
            {% if active_page == 'inventory' %}
                text-[#f0c75e] bg-blue-600/10
            {% else %}
-               text-slate-400 hover:text-white hover:bg-[#551522]/70
+               text-black hover:text-white hover:bg-[#551522]/70
            {% endif %}">
 
             <span class="font-medium">Overview</span>
@@ -322,7 +567,7 @@
                 {% if active_page == 'inventory_products' %}
                     text-[#f0c75e] bg-blue-600/10
                 {% else %}
-                    text-slate-400 hover:text-white hover:bg-[#551522]/70
+                    text-black hover:text-white hover:bg-[#551522]/70
                 {% endif %}">
             <span class="font-medium">Products</span>
         </a>
@@ -333,7 +578,7 @@
             {% if active_page == 'inventory_categories' %}
                 text-[#f0c75e] bg-blue-600/10
             {% else %}
-                text-slate-400 hover:text-white hover:bg-[#551522]/70
+                text-black hover:text-white hover:bg-[#551522]/70
             {% endif %}">
 
                 <span class="font-medium">Categories</span>
@@ -341,7 +586,7 @@
 
         <!-- STOCK MANAGEMENT -->
         <a href="#"
-           class="flex items-center gap-2.5 px-3 py-2 rounded-md text-xs text-slate-400 hover:text-white hover:bg-[#551522]/70 transition">
+           class="flex items-center gap-2.5 px-3 py-2 rounded-md text-xs text-black hover:text-white hover:bg-[#551522]/70 transition">
 
             <span class="font-medium">Stock Management</span>
         </a>
@@ -354,11 +599,11 @@
 
 <!-- SALES NAVIGATION -->
 <a href="{% url 'sales:sales_list' %}"
-   class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition
+   class="flex items-center gap-2.5 mt-1 px-3 py-2.5 rounded-lg transition
    {% if active_page == 'sales' %}
        bg-[#a9162b]/20 border border-[#d4a62d]/30 text-[#f0c75e]
    {% else %}
-       text-slate-400 hover:bg-[#551522]/70 hover:text-white
+       text-black hover:bg-[#551522]/70 hover:text-white
    {% endif %}">
 
     <svg class="w-4 h-4 shrink-0"
@@ -385,15 +630,15 @@
         </nav>
 
         <!-- SIDEBAR FOOTER -->
-        <div class="p-3 border-t border-[#57202a]">
+        <div class="p-3 border-t border-[#DDDDDD]">
 
-            <div class="rounded-lg bg-[#350d16] p-2.5">
+            <div class="rounded-lg bg-[#FBF1ED] p-2.5">
 
-                <p class="text-[11px] font-semibold text-slate-300">
+                <p class="text-[11px] font-semibold text-black">
                     TelecomOps System
                 </p>
 
-                <p class="text-[9px] text-slate-500 mt-1">
+                <p class="text-[9px] text-black mt-1">
                     Centralized Operations
                 </p>
 
@@ -407,7 +652,7 @@
     <div class="flex-1 min-w-0 h-screen min-h-0 flex flex-col overflow-hidden">
 
         <!-- TOP NAVBAR -->
-        <header class="h-16 shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-[#57202a] bg-[#26090f]/80">
+        <header class="h-16 shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-[#DDDDDD] bg-white/90">
 
         <!-- MOBILE MENU BUTTON -->
         <button
@@ -415,7 +660,7 @@
             id="mobileMenuButton"
             class="lg:hidden flex items-center justify-center w-9 h-9
                 rounded-lg border border-slate-700
-                text-slate-300 hover:bg-slate-800 hover:text-white
+                text-black hover:bg-[#F3EAE8] hover:text-white
                 transition"
             aria-label="Open navigation menu"
             aria-controls="mainSidebar"
@@ -436,7 +681,7 @@
 
             <div>
 
-                <p class="text-[9px] text-slate-500 tracking-widest">
+                <p class="text-[9px] text-black tracking-widest">
                     TELECOMOPS / {% block breadcrumb %}OVERVIEW{% endblock %}
                 </p>
 
@@ -450,7 +695,7 @@
 
                 <!-- NOTIFICATIONS -->
                 <button type="button"
-                        class="relative p-1.5 text-slate-400 hover:text-white"
+                        class="relative p-1.5 text-black hover:text-white"
                         aria-label="Notifications">
 
                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
@@ -462,7 +707,7 @@
 
                 </button>
 
-                <div class="h-7 w-px bg-slate-800"></div>
+                <div class="h-7 w-px bg-[#F3EAE8]"></div>
 
                 <!-- USER INFORMATION -->
                 <div class="flex items-center gap-2.5">
@@ -473,7 +718,7 @@
                             {{ request.user.username }}
                         </p>
 
-                        <p class="text-[10px] text-slate-500">
+                        <p class="text-[10px] text-black">
                             {{ request.user.get_full_name|default:"System User" }}
                         </p>
 
@@ -487,7 +732,7 @@
                         {% csrf_token %}
 
                         <button type="submit"
-                                class="text-[11px] text-slate-400 hover:text-red-400 transition">
+                                class="text-[11px] text-black hover:text-red-400 transition">
                             Sign out
                         </button>
                     </form>
@@ -511,13 +756,13 @@
         </main>
 
         <!-- FOOTER -->
-        <footer class="px-4 sm:px-6 py-3 border-t border-[#57202a] flex flex-col sm:flex-row justify-between gap-1.5">
+        <footer class="px-4 sm:px-6 py-3 border-t border-[#DDDDDD] flex flex-col sm:flex-row justify-between gap-1.5">
 
-            <p class="text-[10px] text-slate-600">
+            <p class="text-[10px] text-black">
                 © {% now "Y" %} TelecomOps. All rights reserved.
             </p>
 
-            <p class="text-[10px] text-slate-600">
+            <p class="text-[10px] text-black">
                 Network Operations
             </p>
 
