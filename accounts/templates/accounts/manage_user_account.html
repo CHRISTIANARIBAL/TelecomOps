@@ -23,7 +23,7 @@
     </div>
 
     <a href="{% url 'user_accounts' %}"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 transition text-xs font-semibold">
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-[#493039] text-slate-200 hover:bg-[#24151A] transition text-xs font-semibold">
 
         ← Back to User Accounts
 
@@ -32,11 +32,11 @@
 </div>
 
 <!-- ACCOUNT PROFILE -->
-<div class="rounded-xl border border-slate-800 bg-[#0c1424] p-5 mb-6">
+<div class="rounded-xl border border-slate-800 border-t-2 border-t-[#D6A52B] bg-[#0c1424] p-5 mb-6 shadow-lg shadow-black/10">
 
     <div class="flex items-center gap-4">
 
-        <div class="w-14 h-14 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-xl font-bold text-blue-400">
+        <div class="w-14 h-14 rounded-xl bg-[#A10E20]/10 border border-[#A10E20]/30 flex items-center justify-center text-xl font-bold text-[#E58A98]">
 
             {{ account.username|first|upper }}
 
@@ -65,7 +65,7 @@
 
     {% csrf_token %}
 
-    <div class="rounded-xl border border-slate-800 bg-[#0c1424] overflow-hidden">
+    <div class="rounded-xl border border-slate-800 border-t-2 border-t-[#D6A52B] bg-[#0c1424] overflow-hidden shadow-lg shadow-black/10">
 
         <div class="px-5 py-4 border-b border-slate-800">
 
@@ -177,14 +177,14 @@
         <div class="px-5 py-4 border-t border-slate-800 flex justify-end gap-3">
 
             <a href="{% url 'user_accounts' %}"
-                class="px-4 py-2.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition">
+                class="px-4 py-2.5 rounded-lg border border-[#493039] text-slate-200 hover:bg-[#24151A] text-xs font-semibold transition">
 
                 Cancel
 
             </a>
 
             <button type="submit"
-                class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition">
+                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-[#E9AD19] bg-gradient-to-r from-[#A9001B] via-[#B50924] to-[#920018] text-white text-xs font-bold shadow-md shadow-[#A10E20]/20 transition hover:brightness-110 active:scale-[0.99]">
 
                 Save Changes
 
@@ -199,15 +199,15 @@
 
 
 <!-- ACCOUNT SECURITY SECTION -->
-<div class="rounded-xl border border-slate-800 bg-[#0c1424] p-5 mt-6">
+<div class="rounded-xl border border-slate-800 border-t-2 border-t-[#D6A52B] bg-[#0c1424] p-5 mt-6 shadow-lg shadow-black/10">
 
     <div class="flex items-center justify-between mb-5">
 
         <div class="flex items-center gap-3">
 
-            <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-lg bg-[#A10E20]/10 border border-[#A10E20]/30 flex items-center justify-center">
 
-                <svg class="w-5 h-5 text-blue-400"
+                <svg class="w-5 h-5 text-[#E58A98]"
                      fill="none"
                      stroke="currentColor"
                      stroke-width="1.7"
@@ -288,9 +288,9 @@
 
             <div class="flex items-center gap-3">
 
-                <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-lg bg-[#A10E20]/10 flex items-center justify-center">
 
-                    <svg class="w-4 h-4 text-blue-400"
+                    <svg class="w-4 h-4 text-[#E58A98]"
                          fill="none"
                          stroke="currentColor"
                          stroke-width="1.7"
@@ -316,7 +316,7 @@
                 </div>
 
                 <div class="ml-auto">
-                    <span class="text-[10px] font-semibold text-blue-400">
+                    <span class="text-[10px] font-semibold text-[#E58A98]">
                         Gmail OTP
                     </span>
                 </div>
@@ -392,4 +392,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
+<style>
+    .telecomops-dropdown-trigger {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        border: 1px solid #334155;
+        border-radius: .625rem;
+        background: #111b2d;
+        padding: .75rem .9rem;
+        color: #e2e8f0;
+        font-size: .8125rem;
+        text-align: left;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .telecomops-dropdown-trigger:hover,
+    .telecomops-dropdown-trigger[aria-expanded="true"] {
+        border-color: #A10E20;
+        background: #171d2c;
+        box-shadow: 0 0 0 3px rgba(161,14,32,.12);
+    }
+    .telecomops-dropdown-menu {
+        position: absolute;
+        z-index: 50;
+        top: calc(100% + .4rem);
+        left: 0;
+        right: 0;
+        max-height: 15rem;
+        overflow-y: auto;
+        padding: .35rem;
+        border: 1px solid #493039;
+        border-radius: .75rem;
+        background: #111b2d;
+        box-shadow: 0 14px 35px rgba(0,0,0,.35);
+    }
+    .telecomops-dropdown-option {
+        display: block;
+        width: 100%;
+        border-radius: .5rem;
+        padding: .65rem .75rem;
+        color: #cbd5e1;
+        font-size: .8125rem;
+        text-align: left;
+        transition: background .15s, color .15s;
+    }
+    .telecomops-dropdown-option:hover,
+    .telecomops-dropdown-option:focus-visible {
+        background: rgba(161,14,32,.18);
+        color: #fff;
+        outline: none;
+    }
+    .telecomops-dropdown select {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+</style>
+
 {% endblock %}

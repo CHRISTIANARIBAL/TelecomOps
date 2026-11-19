@@ -1,191 +1,518 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fff8f6">
     <title>Employee Registration | TelecomOps</title>
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
+
+    <style>
+        .brand-panel {
+            position: relative;
+            isolation: isolate;
+            background-color: #fff8f6;
+            background-image:
+                linear-gradient(90deg,
+                    rgba(255,248,246,.99) 0%,
+                    rgba(255,248,246,.96) 34%,
+                    rgba(255,248,246,.78) 53%,
+                    rgba(255,248,246,.20) 78%,
+                    rgba(255,248,246,.06) 100%),
+                linear-gradient(0deg,
+                    rgba(255,248,246,.08) 0%,
+                    rgba(255,248,246,0) 45%),
+                url("{% static 'images/login_mountains_birds.png' %}");
+            background-repeat: no-repeat;
+            background-position: center, center, center;
+            background-size: cover;
+        }
+
+        .wave-art {
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 7.8rem;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1023px) {
+            .brand-panel {
+                min-height: 650px;
+                background-position: center, center, 58% center;
+            }
+            .wave-art { height: 7rem; }
+        }
+
+        @media (max-width: 639px) {
+            .brand-panel {
+                min-height: 610px;
+                background-image:
+                    linear-gradient(90deg, rgba(255,248,246,.94), rgba(255,248,246,.78)),
+                    url("{% static 'images/login_mountains_birds.png' %}");
+                background-position: center, 62% center;
+                background-size: cover;
+            }
+            .wave-art { height: 6rem; }
+        }
+
+        .bird-flock {
+            position: absolute;
+            z-index: 5;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .flying-bird {
+            position: absolute;
+            left: var(--bird-left);
+            top: var(--bird-top);
+            width: var(--bird-size, 18px);
+            height: auto;
+            color: #54251f;
+            opacity: var(--bird-opacity, .78);
+            transform-origin: center;
+            filter: drop-shadow(0 1px 1px rgba(90, 35, 25, .10));
+            animation: bird-random-flight var(--bird-duration, 12s) ease-in-out infinite;
+            animation-delay: var(--bird-delay, 0s);
+            will-change: transform;
+        }
+        .flying-bird svg { display: block; width: 100%; height: auto; }
+        @keyframes bird-random-flight {
+            0%   { transform: translate3d(0, 0, 0) rotate(var(--bird-tilt-a, -5deg)) scale(var(--bird-scale, 1)); }
+            25%  { transform: translate3d(var(--bird-x1, 22px), var(--bird-y1, -12px), 0) rotate(var(--bird-tilt-b, 5deg)) scale(var(--bird-scale, 1)); }
+            55%  { transform: translate3d(var(--bird-x2, -18px), var(--bird-y2, 16px), 0) rotate(var(--bird-tilt-c, -2deg)) scale(var(--bird-scale, 1)); }
+            78%  { transform: translate3d(var(--bird-x3, 30px), var(--bird-y3, -18px), 0) rotate(var(--bird-tilt-d, 7deg)) scale(var(--bird-scale, 1)); }
+            100% { transform: translate3d(0, 0, 0) rotate(var(--bird-tilt-a, -5deg)) scale(var(--bird-scale, 1)); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .flying-bird { animation: none; opacity: .72; }
+            .flying-bird:nth-child(n+9) { display: none; }
+        }
+
+    </style>
 </head>
 
-<body class="min-h-screen bg-[#080d19] text-slate-100 antialiased">
+<body class="min-h-screen bg-white text-[#241B1C] antialiased">
+    <main class="min-h-screen grid grid-cols-1 lg:grid-cols-[55.8%_44.2%]">
 
-<main class="min-h-screen grid lg:grid-cols-2">
+        <!-- LEFT: BRAND STORY AND MOUNTAIN LANDSCAPE -->
+        <section class="brand-panel relative isolate flex min-h-[760px] flex-col overflow-hidden px-8 py-8 sm:px-10 lg:min-h-screen lg:px-10 lg:py-8">
 
-    <section class="hidden lg:flex flex-col justify-between
-        p-12 bg-[#0c1424] border-r border-slate-800">
-
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-xl bg-blue-600
-                flex items-center justify-center font-bold text-xl">T</div>
-            <div>
-                <h1 class="font-bold text-xl">TelecomOps</h1>
-                <p class="text-xs text-slate-500">OPERATIONS MANAGEMENT</p>
+            <!-- Animated flock: decorative birds flying across the sunrise -->
+            <!-- 48 individually animated birds, clustered in the center sky -->
+            <div class="bird-flock" aria-hidden="true">
+                <span class="flying-bird" style="--bird-left:83.5%; --bird-top:13.9%; --bird-size:13px; --bird-duration:9.7s; --bird-delay:-4.8s; --bird-opacity:0.69; --bird-scale:0.80; --bird-x1:7px; --bird-y1:6px; --bird-x2:-1px; --bird-y2:21px; --bird-x3:-2px; --bird-y3:-17px; --bird-tilt-a:4deg; --bird-tilt-b:11deg; --bird-tilt-c:0deg; --bird-tilt-d:3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:47.1%; --bird-top:23.6%; --bird-size:18px; --bird-duration:13.4s; --bird-delay:-15.3s; --bird-opacity:0.75; --bird-scale:0.83; --bird-x1:-8px; --bird-y1:13px; --bird-x2:33px; --bird-y2:15px; --bird-x3:-17px; --bird-y3:20px; --bird-tilt-a:10deg; --bird-tilt-b:9deg; --bird-tilt-c:-6deg; --bird-tilt-d:5deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:43.1%; --bird-top:15.5%; --bird-size:11px; --bird-duration:8.7s; --bird-delay:-8.1s; --bird-opacity:0.89; --bird-scale:1.18; --bird-x1:-1px; --bird-y1:-5px; --bird-x2:32px; --bird-y2:-3px; --bird-x3:-17px; --bird-y3:-20px; --bird-tilt-a:-10deg; --bird-tilt-b:6deg; --bird-tilt-c:-7deg; --bird-tilt-d:-1deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:71.6%; --bird-top:18.0%; --bird-size:18px; --bird-duration:8.6s; --bird-delay:-2.7s; --bird-opacity:0.89; --bird-scale:0.98; --bird-x1:1px; --bird-y1:-3px; --bird-x2:24px; --bird-y2:11px; --bird-x3:-12px; --bird-y3:12px; --bird-tilt-a:-12deg; --bird-tilt-b:0deg; --bird-tilt-c:-1deg; --bird-tilt-d:-6deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:78.1%; --bird-top:25.4%; --bird-size:18px; --bird-duration:12.0s; --bird-delay:-0.0s; --bird-opacity:0.85; --bird-scale:0.88; --bird-x1:-16px; --bird-y1:-13px; --bird-x2:34px; --bird-y2:13px; --bird-x3:26px; --bird-y3:-17px; --bird-tilt-a:4deg; --bird-tilt-b:-4deg; --bird-tilt-c:-7deg; --bird-tilt-d:-3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:42.9%; --bird-top:40.2%; --bird-size:21px; --bird-duration:9.4s; --bird-delay:-7.8s; --bird-opacity:0.67; --bird-scale:0.99; --bird-x1:15px; --bird-y1:20px; --bird-x2:9px; --bird-y2:15px; --bird-x3:-18px; --bird-y3:-11px; --bird-tilt-a:3deg; --bird-tilt-b:7deg; --bird-tilt-c:3deg; --bird-tilt-d:-10deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:62.9%; --bird-top:19.6%; --bird-size:21px; --bird-duration:16.0s; --bird-delay:-10.1s; --bird-opacity:0.68; --bird-scale:0.96; --bird-x1:19px; --bird-y1:23px; --bird-x2:31px; --bird-y2:-22px; --bird-x3:-3px; --bird-y3:-9px; --bird-tilt-a:-2deg; --bird-tilt-b:0deg; --bird-tilt-c:10deg; --bird-tilt-d:9deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:89.3%; --bird-top:42.2%; --bird-size:29px; --bird-duration:14.8s; --bird-delay:-2.3s; --bird-opacity:0.59; --bird-scale:0.84; --bird-x1:21px; --bird-y1:2px; --bird-x2:4px; --bird-y2:0px; --bird-x3:-36px; --bird-y3:-9px; --bird-tilt-a:8deg; --bird-tilt-b:1deg; --bird-tilt-c:0deg; --bird-tilt-d:9deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:75.5%; --bird-top:26.4%; --bird-size:18px; --bird-duration:8.0s; --bird-delay:-10.9s; --bird-opacity:0.64; --bird-scale:1.00; --bird-x1:-27px; --bird-y1:-4px; --bird-x2:-24px; --bird-y2:19px; --bird-x3:-33px; --bird-y3:12px; --bird-tilt-a:-7deg; --bird-tilt-b:-4deg; --bird-tilt-c:-7deg; --bird-tilt-d:9deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:52.0%; --bird-top:30.6%; --bird-size:15px; --bird-duration:7.8s; --bird-delay:-4.1s; --bird-opacity:0.80; --bird-scale:0.95; --bird-x1:26px; --bird-y1:13px; --bird-x2:25px; --bird-y2:-14px; --bird-x3:-28px; --bird-y3:7px; --bird-tilt-a:-3deg; --bird-tilt-b:4deg; --bird-tilt-c:-7deg; --bird-tilt-d:-6deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:55.2%; --bird-top:47.1%; --bird-size:18px; --bird-duration:17.1s; --bird-delay:-15.4s; --bird-opacity:0.89; --bird-scale:1.14; --bird-x1:-2px; --bird-y1:-4px; --bird-x2:-4px; --bird-y2:-11px; --bird-x3:29px; --bird-y3:19px; --bird-tilt-a:4deg; --bird-tilt-b:6deg; --bird-tilt-c:6deg; --bird-tilt-d:4deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:85.1%; --bird-top:16.0%; --bird-size:18px; --bird-duration:16.0s; --bird-delay:-6.4s; --bird-opacity:0.59; --bird-scale:0.84; --bird-x1:35px; --bird-y1:13px; --bird-x2:-25px; --bird-y2:-10px; --bird-x3:16px; --bird-y3:2px; --bird-tilt-a:-5deg; --bird-tilt-b:-6deg; --bird-tilt-c:3deg; --bird-tilt-d:-4deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:53.9%; --bird-top:22.2%; --bird-size:13px; --bird-duration:10.1s; --bird-delay:-9.6s; --bird-opacity:0.75; --bird-scale:0.91; --bird-x1:24px; --bird-y1:-4px; --bird-x2:1px; --bird-y2:6px; --bird-x3:-8px; --bird-y3:-7px; --bird-tilt-a:-3deg; --bird-tilt-b:9deg; --bird-tilt-c:2deg; --bird-tilt-d:8deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:55.7%; --bird-top:41.3%; --bird-size:15px; --bird-duration:15.2s; --bird-delay:-0.4s; --bird-opacity:0.74; --bird-scale:0.85; --bird-x1:37px; --bird-y1:23px; --bird-x2:4px; --bird-y2:3px; --bird-x3:-37px; --bird-y3:7px; --bird-tilt-a:11deg; --bird-tilt-b:-6deg; --bird-tilt-c:-9deg; --bird-tilt-d:11deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:42.4%; --bird-top:37.4%; --bird-size:21px; --bird-duration:16.7s; --bird-delay:-7.9s; --bird-opacity:0.87; --bird-scale:0.84; --bird-x1:-25px; --bird-y1:1px; --bird-x2:-38px; --bird-y2:-19px; --bird-x3:26px; --bird-y3:-1px; --bird-tilt-a:7deg; --bird-tilt-b:-4deg; --bird-tilt-c:5deg; --bird-tilt-d:-2deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:66.9%; --bird-top:30.4%; --bird-size:21px; --bird-duration:16.1s; --bird-delay:-15.2s; --bird-opacity:0.75; --bird-scale:1.12; --bird-x1:-38px; --bird-y1:10px; --bird-x2:-4px; --bird-y2:-8px; --bird-x3:41px; --bird-y3:-16px; --bird-tilt-a:-6deg; --bird-tilt-b:-7deg; --bird-tilt-c:8deg; --bird-tilt-d:-12deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:52.4%; --bird-top:32.6%; --bird-size:11px; --bird-duration:12.8s; --bird-delay:-3.1s; --bird-opacity:0.77; --bird-scale:0.97; --bird-x1:8px; --bird-y1:-2px; --bird-x2:-3px; --bird-y2:-23px; --bird-x3:-19px; --bird-y3:-19px; --bird-tilt-a:9deg; --bird-tilt-b:2deg; --bird-tilt-c:-12deg; --bird-tilt-d:-7deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:89.2%; --bird-top:44.5%; --bird-size:18px; --bird-duration:11.8s; --bird-delay:-12.5s; --bird-opacity:0.66; --bird-scale:1.08; --bird-x1:-24px; --bird-y1:13px; --bird-x2:-11px; --bird-y2:-11px; --bird-x3:-6px; --bird-y3:24px; --bird-tilt-a:7deg; --bird-tilt-b:-5deg; --bird-tilt-c:8deg; --bird-tilt-d:8deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:76.2%; --bird-top:42.1%; --bird-size:13px; --bird-duration:17.0s; --bird-delay:-7.5s; --bird-opacity:0.74; --bird-scale:0.88; --bird-x1:-27px; --bird-y1:7px; --bird-x2:-4px; --bird-y2:11px; --bird-x3:-29px; --bird-y3:6px; --bird-tilt-a:-4deg; --bird-tilt-b:4deg; --bird-tilt-c:-11deg; --bird-tilt-d:-12deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:48.9%; --bird-top:26.6%; --bird-size:15px; --bird-duration:16.7s; --bird-delay:-14.1s; --bird-opacity:0.72; --bird-scale:0.97; --bird-x1:-31px; --bird-y1:-18px; --bird-x2:17px; --bird-y2:-13px; --bird-x3:25px; --bird-y3:-3px; --bird-tilt-a:4deg; --bird-tilt-b:2deg; --bird-tilt-c:4deg; --bird-tilt-d:7deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:60.1%; --bird-top:45.9%; --bird-size:15px; --bird-duration:14.4s; --bird-delay:-1.0s; --bird-opacity:0.81; --bird-scale:0.80; --bird-x1:8px; --bird-y1:-6px; --bird-x2:-16px; --bird-y2:-11px; --bird-x3:10px; --bird-y3:-1px; --bird-tilt-a:-4deg; --bird-tilt-b:0deg; --bird-tilt-c:-10deg; --bird-tilt-d:-9deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:45.6%; --bird-top:31.0%; --bird-size:25px; --bird-duration:12.3s; --bird-delay:-10.1s; --bird-opacity:0.82; --bird-scale:0.80; --bird-x1:41px; --bird-y1:4px; --bird-x2:36px; --bird-y2:6px; --bird-x3:-16px; --bird-y3:20px; --bird-tilt-a:-8deg; --bird-tilt-b:-11deg; --bird-tilt-c:-4deg; --bird-tilt-d:11deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:75.7%; --bird-top:32.6%; --bird-size:25px; --bird-duration:10.5s; --bird-delay:-1.4s; --bird-opacity:0.76; --bird-scale:0.96; --bird-x1:26px; --bird-y1:-23px; --bird-x2:6px; --bird-y2:-17px; --bird-x3:32px; --bird-y3:-21px; --bird-tilt-a:9deg; --bird-tilt-b:-8deg; --bird-tilt-c:-9deg; --bird-tilt-d:10deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:86.3%; --bird-top:15.7%; --bird-size:18px; --bird-duration:10.2s; --bird-delay:-14.0s; --bird-opacity:0.87; --bird-scale:0.90; --bird-x1:-8px; --bird-y1:-24px; --bird-x2:26px; --bird-y2:8px; --bird-x3:-26px; --bird-y3:24px; --bird-tilt-a:-12deg; --bird-tilt-b:-11deg; --bird-tilt-c:11deg; --bird-tilt-d:3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:68.1%; --bird-top:30.8%; --bird-size:21px; --bird-duration:14.0s; --bird-delay:-5.2s; --bird-opacity:0.65; --bird-scale:0.99; --bird-x1:-29px; --bird-y1:-4px; --bird-x2:-1px; --bird-y2:-16px; --bird-x3:-20px; --bird-y3:10px; --bird-tilt-a:0deg; --bird-tilt-b:3deg; --bird-tilt-c:9deg; --bird-tilt-d:-3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:41.3%; --bird-top:28.7%; --bird-size:21px; --bird-duration:16.6s; --bird-delay:-1.4s; --bird-opacity:0.85; --bird-scale:0.82; --bird-x1:4px; --bird-y1:-2px; --bird-x2:16px; --bird-y2:2px; --bird-x3:-30px; --bird-y3:22px; --bird-tilt-a:10deg; --bird-tilt-b:8deg; --bird-tilt-c:-10deg; --bird-tilt-d:-6deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:80.9%; --bird-top:26.0%; --bird-size:21px; --bird-duration:16.0s; --bird-delay:-6.7s; --bird-opacity:0.59; --bird-scale:1.08; --bird-x1:13px; --bird-y1:4px; --bird-x2:38px; --bird-y2:9px; --bird-x3:2px; --bird-y3:20px; --bird-tilt-a:1deg; --bird-tilt-b:4deg; --bird-tilt-c:8deg; --bird-tilt-d:2deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:73.8%; --bird-top:24.0%; --bird-size:13px; --bird-duration:15.6s; --bird-delay:-8.6s; --bird-opacity:0.67; --bird-scale:0.79; --bird-x1:34px; --bird-y1:4px; --bird-x2:8px; --bird-y2:24px; --bird-x3:30px; --bird-y3:-18px; --bird-tilt-a:2deg; --bird-tilt-b:-5deg; --bird-tilt-c:-1deg; --bird-tilt-d:6deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:69.8%; --bird-top:36.5%; --bird-size:18px; --bird-duration:13.0s; --bird-delay:-15.4s; --bird-opacity:0.63; --bird-scale:1.10; --bird-x1:-12px; --bird-y1:-23px; --bird-x2:-14px; --bird-y2:23px; --bird-x3:15px; --bird-y3:-10px; --bird-tilt-a:-5deg; --bird-tilt-b:-12deg; --bird-tilt-c:8deg; --bird-tilt-d:8deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:40.3%; --bird-top:39.2%; --bird-size:21px; --bird-duration:9.3s; --bird-delay:-14.6s; --bird-opacity:0.69; --bird-scale:1.01; --bird-x1:-38px; --bird-y1:18px; --bird-x2:34px; --bird-y2:1px; --bird-x3:21px; --bird-y3:-4px; --bird-tilt-a:2deg; --bird-tilt-b:-4deg; --bird-tilt-c:5deg; --bird-tilt-d:1deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:83.7%; --bird-top:21.8%; --bird-size:18px; --bird-duration:15.1s; --bird-delay:-9.4s; --bird-opacity:0.62; --bird-scale:0.90; --bird-x1:-7px; --bird-y1:23px; --bird-x2:30px; --bird-y2:-19px; --bird-x3:-5px; --bird-y3:-20px; --bird-tilt-a:0deg; --bird-tilt-b:-3deg; --bird-tilt-c:-4deg; --bird-tilt-d:5deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:90.3%; --bird-top:42.5%; --bird-size:13px; --bird-duration:8.9s; --bird-delay:-11.7s; --bird-opacity:0.69; --bird-scale:1.09; --bird-x1:42px; --bird-y1:5px; --bird-x2:-9px; --bird-y2:21px; --bird-x3:17px; --bird-y3:-22px; --bird-tilt-a:-6deg; --bird-tilt-b:-12deg; --bird-tilt-c:5deg; --bird-tilt-d:1deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:42.5%; --bird-top:46.8%; --bird-size:11px; --bird-duration:8.7s; --bird-delay:-2.4s; --bird-opacity:0.82; --bird-scale:0.80; --bird-x1:28px; --bird-y1:-18px; --bird-x2:29px; --bird-y2:6px; --bird-x3:-27px; --bird-y3:-22px; --bird-tilt-a:-5deg; --bird-tilt-b:-1deg; --bird-tilt-c:-1deg; --bird-tilt-d:6deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:41.8%; --bird-top:37.8%; --bird-size:21px; --bird-duration:15.7s; --bird-delay:-2.1s; --bird-opacity:0.87; --bird-scale:0.91; --bird-x1:30px; --bird-y1:20px; --bird-x2:13px; --bird-y2:-2px; --bird-x3:-12px; --bird-y3:-9px; --bird-tilt-a:7deg; --bird-tilt-b:4deg; --bird-tilt-c:8deg; --bird-tilt-d:2deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:85.3%; --bird-top:14.0%; --bird-size:18px; --bird-duration:15.9s; --bird-delay:-5.9s; --bird-opacity:0.70; --bird-scale:1.11; --bird-x1:-15px; --bird-y1:-14px; --bird-x2:38px; --bird-y2:-21px; --bird-x3:-2px; --bird-y3:19px; --bird-tilt-a:10deg; --bird-tilt-b:-10deg; --bird-tilt-c:-11deg; --bird-tilt-d:4deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:86.9%; --bird-top:27.0%; --bird-size:18px; --bird-duration:7.7s; --bird-delay:-6.2s; --bird-opacity:0.79; --bird-scale:0.83; --bird-x1:34px; --bird-y1:-21px; --bird-x2:-10px; --bird-y2:9px; --bird-x3:10px; --bird-y3:8px; --bird-tilt-a:11deg; --bird-tilt-b:2deg; --bird-tilt-c:8deg; --bird-tilt-d:-3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:48.0%; --bird-top:45.9%; --bird-size:29px; --bird-duration:9.0s; --bird-delay:-15.8s; --bird-opacity:0.83; --bird-scale:1.05; --bird-x1:-33px; --bird-y1:15px; --bird-x2:10px; --bird-y2:9px; --bird-x3:-4px; --bird-y3:1px; --bird-tilt-a:10deg; --bird-tilt-b:-10deg; --bird-tilt-c:3deg; --bird-tilt-d:5deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:52.1%; --bird-top:44.0%; --bird-size:13px; --bird-duration:15.0s; --bird-delay:-3.8s; --bird-opacity:0.65; --bird-scale:1.05; --bird-x1:12px; --bird-y1:12px; --bird-x2:-1px; --bird-y2:-5px; --bird-x3:-22px; --bird-y3:-3px; --bird-tilt-a:-3deg; --bird-tilt-b:2deg; --bird-tilt-c:-10deg; --bird-tilt-d:-3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:67.1%; --bird-top:38.1%; --bird-size:13px; --bird-duration:7.6s; --bird-delay:-5.3s; --bird-opacity:0.63; --bird-scale:0.88; --bird-x1:1px; --bird-y1:15px; --bird-x2:0px; --bird-y2:6px; --bird-x3:-13px; --bird-y3:2px; --bird-tilt-a:0deg; --bird-tilt-b:4deg; --bird-tilt-c:-11deg; --bird-tilt-d:12deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:41.0%; --bird-top:44.7%; --bird-size:13px; --bird-duration:14.0s; --bird-delay:-8.0s; --bird-opacity:0.79; --bird-scale:1.12; --bird-x1:-31px; --bird-y1:-3px; --bird-x2:-35px; --bird-y2:0px; --bird-x3:29px; --bird-y3:-15px; --bird-tilt-a:-6deg; --bird-tilt-b:-6deg; --bird-tilt-c:0deg; --bird-tilt-d:-9deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:87.0%; --bird-top:16.1%; --bird-size:15px; --bird-duration:15.3s; --bird-delay:-5.6s; --bird-opacity:0.81; --bird-scale:0.81; --bird-x1:-14px; --bird-y1:-19px; --bird-x2:-32px; --bird-y2:-7px; --bird-x3:-34px; --bird-y3:8px; --bird-tilt-a:-12deg; --bird-tilt-b:-10deg; --bird-tilt-c:10deg; --bird-tilt-d:-10deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:87.5%; --bird-top:34.5%; --bird-size:21px; --bird-duration:11.1s; --bird-delay:-13.2s; --bird-opacity:0.85; --bird-scale:0.94; --bird-x1:-16px; --bird-y1:-6px; --bird-x2:33px; --bird-y2:-11px; --bird-x3:-10px; --bird-y3:-4px; --bird-tilt-a:2deg; --bird-tilt-b:-7deg; --bird-tilt-c:-4deg; --bird-tilt-d:-7deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:69.0%; --bird-top:13.6%; --bird-size:13px; --bird-duration:8.9s; --bird-delay:-7.6s; --bird-opacity:0.76; --bird-scale:1.16; --bird-x1:8px; --bird-y1:19px; --bird-x2:34px; --bird-y2:18px; --bird-x3:-2px; --bird-y3:19px; --bird-tilt-a:8deg; --bird-tilt-b:-4deg; --bird-tilt-c:3deg; --bird-tilt-d:11deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:41.1%; --bird-top:23.9%; --bird-size:9px; --bird-duration:9.9s; --bird-delay:-13.8s; --bird-opacity:0.64; --bird-scale:1.00; --bird-x1:-32px; --bird-y1:-19px; --bird-x2:-33px; --bird-y2:1px; --bird-x3:-36px; --bird-y3:12px; --bird-tilt-a:11deg; --bird-tilt-b:-8deg; --bird-tilt-c:4deg; --bird-tilt-d:-3deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:83.5%; --bird-top:26.4%; --bird-size:18px; --bird-duration:14.0s; --bird-delay:-5.5s; --bird-opacity:0.79; --bird-scale:1.07; --bird-x1:-30px; --bird-y1:1px; --bird-x2:-27px; --bird-y2:-6px; --bird-x3:8px; --bird-y3:-16px; --bird-tilt-a:-8deg; --bird-tilt-b:-4deg; --bird-tilt-c:6deg; --bird-tilt-d:-1deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:42.1%; --bird-top:14.4%; --bird-size:13px; --bird-duration:9.1s; --bird-delay:-12.0s; --bird-opacity:0.72; --bird-scale:1.16; --bird-x1:-12px; --bird-y1:-22px; --bird-x2:16px; --bird-y2:-8px; --bird-x3:30px; --bird-y3:-1px; --bird-tilt-a:0deg; --bird-tilt-b:-11deg; --bird-tilt-c:8deg; --bird-tilt-d:2deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:68.5%; --bird-top:17.7%; --bird-size:29px; --bird-duration:16.3s; --bird-delay:-6.1s; --bird-opacity:0.68; --bird-scale:0.83; --bird-x1:-28px; --bird-y1:-19px; --bird-x2:16px; --bird-y2:4px; --bird-x3:-38px; --bird-y3:3px; --bird-tilt-a:12deg; --bird-tilt-b:-6deg; --bird-tilt-c:-4deg; --bird-tilt-d:8deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
+                <span class="flying-bird" style="--bird-left:89.4%; --bird-top:36.2%; --bird-size:25px; --bird-duration:8.6s; --bird-delay:-4.1s; --bird-opacity:0.70; --bird-scale:1.14; --bird-x1:-15px; --bird-y1:-4px; --bird-x2:27px; --bird-y2:-7px; --bird-x3:25px; --bird-y3:-16px; --bird-tilt-a:-7deg; --bird-tilt-b:5deg; --bird-tilt-c:9deg; --bird-tilt-d:2deg;"><svg viewBox="0 0 64 36" aria-hidden="true"><path fill="currentColor" d="M2 20 C13 16 20 7 27 5 C25 12 21 16 17 19 C28 15 39 8 51 3 C48 13 41 19 32 22 C43 21 53 19 62 14 C56 27 43 30 31 26 C19 23 10 25 2 20Z"/></svg></span>
             </div>
-        </div>
 
-        <div>
-            <p class="text-blue-400 text-sm mb-5">JOIN OUR WORKSPACE</p>
 
-            <h2 class="text-5xl font-bold leading-tight">
-                One team.
-                <span class="text-blue-500">One connected system.</span>
-            </h2>
 
-            <p class="text-slate-400 leading-7 mt-6 max-w-lg">
-                Request access to our centralized billing,
-                network monitoring and inventory platform.
-            </p>
+            <!-- TelecomOps brand -->
+            
+<div class="relative z-10 flex items-center gap-4">
+    <!-- Eagle Brand Logo -->
+   <!-- Eagle Brand Logo -->
+<div class="h-14 w-14 shrink-0 overflow-hidden rounded-xl
+            shadow-lg shadow-[#991126]/20 ring-1 ring-[#D4A62D]/50">
+    <img
+        src="{% static 'images/telecomops_eagle_logo.png' %}"
+        alt="TelecomOps Eagle Logo"
+        class="h-full w-full object-cover"
+    >
+</div>
 
-            <div class="mt-10 space-y-4 text-sm text-slate-400">
-                <p>✓ Secure employee registration</p>
-                <p>✓ Verified email ownership</p>
-                <p>✓ Administrator-approved access</p>
-            </div>
-        </div>
+    <!-- Brand Name -->
+    <div class="border-l-2 border-[#A10E20]/80 pl-4">
+        <h1 class="text-2xl font-extrabold leading-none tracking-tight text-[#21191A] sm:text-[1.8rem]">
+            Telecom<span class="text-[#A10E20]">Ops</span>
+        </h1>
 
-        <p class="text-xs text-slate-600">
-            © 2026 TelecomOps. All rights reserved.
+        <p class="mt-2 text-[10px] font-semibold tracking-[0.22em] text-[#6F6265] sm:text-xs">
+            OPERATIONS MANAGEMENT
         </p>
+    </div>
+</div>
 
-    </section>
 
-    <section class="flex items-center justify-center p-6 sm:p-10">
+            <!-- Main message -->
+            <div class="relative z-10 my-auto max-w-[700px] pb-24 pt-12 sm:pt-14 lg:pb-20 lg:pt-12">
+                <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-[#E9A52B] bg-white/70 px-4 py-2 text-sm font-semibold text-[#991126] shadow-sm backdrop-blur-sm">
+                    <span class="h-2.5 w-2.5 rounded-full bg-[#B51227]"></span>
+                    Unified Telecom Management
+                </div>
 
-        <div class="w-full max-w-lg">
-
-            <div class="mb-8">
-                <p class="text-blue-400 text-sm font-semibold mb-3">
-                    CREATE AN ACCOUNT
-                </p>
-
-                <h2 class="text-3xl font-bold">
-                    Employee registration
+                <h2 class="max-w-[700px] text-[2.45rem] font-extrabold leading-[1.08] tracking-[-0.045em] text-[#251C1D] sm:text-[2.8rem] xl:text-[3.15rem]">
+                    Everything connected.
+                    <span class="mt-1 block text-[#A10E20]">One platform.</span>
                 </h2>
 
-                <p class="text-sm text-slate-500 mt-3">
-                    Submit your information to request system access.
+                <p class="mt-6 max-w-[650px] text-base leading-7 text-[#62575A] sm:text-[1.05rem]">
+                    Manage billing, monitor network infrastructure, and organize your inventory through one centralized operations platform.
                 </p>
+
+                <!-- Three feature highlights -->
+                <div class="mt-8 grid max-w-[690px] grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
+                    <div class="flex items-center gap-3 border-[#E7A52B] sm:border-r sm:pr-4">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m3 8 9-5 9 5-9 5-9-5Zm0 4 9 5 9-5M3 16l9 5 9-5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Billing</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Management</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-[#E7A52B] sm:border-r sm:pr-4">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 21V9m-5 12 5-12 5 12M6.5 7.5a7.8 7.8 0 0 1 11 0M3.5 4.5a12 12 0 0 1 17 0M10 5a3 3 0 0 1 4 0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Network</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Monitoring</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/95 text-[#C4142A] shadow-md shadow-[#8F2630]/10">
+                            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm-9 5 9 5 9-5m-9 5v8m-4.5-15.5 9 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-bold text-[#21191A]">Inventory</p>
+                            <p class="mt-1 text-sm text-[#6F6265]">Management</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="mb-4 p-3 rounded-xl bg-red-500/10
-                        border border-red-500/20 text-sm text-red-400">
-                        {{ message }}
+            <!-- Smooth crimson footer with a gold curved ribbon -->
+            <svg class="wave-art" viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="goldWave" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FFF09A"/>
+                        <stop offset=".48" stop-color="#FFD43B"/>
+                        <stop offset="1" stop-color="#E9A900"/>
+                    </linearGradient>
+                    <linearGradient id="redWave" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#B5122A"/>
+                        <stop offset="1" stop-color="#870719"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0 34 C210 45 330 116 560 126 C735 134 875 78 1000 43 L1000 160 L0 160 Z" fill="url(#redWave)"/>
+                <path d="M0 25 C210 36 330 107 560 117 C735 125 875 69 1000 34"
+                      fill="none" stroke="url(#goldWave)" stroke-width="25" stroke-linecap="round"/>
+                <path d="M0 39 C210 50 330 121 560 131 C735 139 875 83 1000 48"
+                      fill="none" stroke="#FFF1A8" stroke-width="3"/>
+            </svg>
+
+            <p class="relative z-10 mt-auto pb-4 text-[10px] text-white drop-shadow-sm">
+                © {% now "Y" %} TelecomOps. All rights reserved.
+            </p>
+        </section>
+
+        <!-- RIGHT: EMPLOYEE REGISTRATION -->
+        <section class="relative isolate flex min-h-screen items-center justify-center
+                        overflow-hidden bg-transparent px-5 py-10
+                        sm:px-10 lg:px-12 xl:px-16">
+            <div class="relative z-10 my-auto w-full max-w-[560px]
+                        rounded-3xl border border-white/50 bg-white/35
+                        p-6 shadow-[0_15px_40px_rgba(100,20,30,0.06)]
+                        backdrop-blur-md sm:p-8">
+
+                <!-- Mobile brand -->
+                <div class="mb-8 flex items-center gap-3 lg:hidden">
+                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-xl shadow-md ring-1 ring-[#D4A62D]/50">
+                        <img src="{% static 'images/telecomops_eagle_logo.png' %}"
+                             alt="TelecomOps Eagle Logo" class="h-full w-full object-cover">
                     </div>
-                {% endfor %}
-            {% endif %}
+                    <div class="border-l-2 border-[#A10E20]/80 pl-3">
+                        <p class="text-xl font-extrabold leading-none text-[#21191A]">
+                            Telecom<span class="text-[#A10E20]">Ops</span>
+                        </p>
+                        <p class="mt-1.5 text-[9px] font-semibold tracking-[0.18em] text-[#6F6265]">
+                            OPERATIONS MANAGEMENT
+                        </p>
+                    </div>
+                </div>
 
-            <form method="POST" class="space-y-5">
-                {% csrf_token %}
+                <div class="mb-7">
+                    <p class="text-xs font-extrabold tracking-wide text-[#A10E20]">
+                        CREATE YOUR ACCOUNT
+                    </p>
+                    <div class="mt-3 h-1.5 w-16 rounded-full bg-[#F2B51D]"></div>
+                    <h2 class="mt-4 text-[1.75rem] font-extrabold tracking-tight text-[#171313] sm:text-[2rem]">
+                        Employee registration
+                    </h2>
+                    <p class="mt-2 text-sm leading-6 text-[#6F6265]">
+                        Fill in your details to request access to the TelecomOps workspace.
+                    </p>
+                </div>
 
-                {% if form.non_field_errors %}
-                    <div class="text-sm text-red-400">
-                        {{ form.non_field_errors }}
+                <!-- Django messages -->
+                {% if messages %}
+                    <div class="mb-5 space-y-3" role="status" aria-live="polite">
+                        {% for message in messages %}
+                            {% if 'success' in message.tags %}
+                                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                                    {{ message }}
+                                </div>
+                            {% elif 'warning' in message.tags %}
+                                <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                                    {{ message }}
+                                </div>
+                            {% else %}
+                                <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 {% endif %}
 
-                <div class="grid grid-cols-2 gap-4">
+                <form method="POST" class="register-form space-y-4" novalidate>
+                    {% csrf_token %}
 
-                    <div>
-                        <label class="block text-sm mb-2">First name</label>
-                        {{ form.first_name }}
-                        {{ form.first_name.errors }}
+                    {% if form.non_field_errors %}
+                        <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}"
+                                   class="mb-2 block text-sm font-bold text-[#2B2021]">
+                                First name
+                            </label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </div>
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}"
+                                   class="mb-2 block text-sm font-bold text-[#2B2021]">
+                                Last name
+                            </label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm mb-2">Last name</label>
-                        {{ form.last_name }}
-                        {{ form.last_name.errors }}
+                        <label for="{{ form.username.id_for_label }}"
+                               class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Username
+                        </label>
+                        {{ form.username }}
+                        {{ form.username.errors }}
                     </div>
 
+                    <div>
+                        <label for="{{ form.email.id_for_label }}"
+                               class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Work email address
+                        </label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.password1.id_for_label }}"
+                               class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Password
+                        </label>
+                        <div class="password-field relative">
+                            {{ form.password1 }}
+                            <button type="button" class="password-toggle"
+                                    data-password-target="{{ form.password1.id_for_label }}"
+                                    aria-label="Show password" aria-pressed="false">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke-width="1.8"/>
+                                    <circle cx="12" cy="12" r="2.5" stroke-width="1.8"/>
+                                </svg>
+                            </button>
+                        </div>
+                        {{ form.password1.errors }}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.password2.id_for_label }}"
+                               class="mb-2 block text-sm font-bold text-[#2B2021]">
+                            Confirm password
+                        </label>
+                        <div class="password-field relative">
+                            {{ form.password2 }}
+                            <button type="button" class="password-toggle"
+                                    data-password-target="{{ form.password2.id_for_label }}"
+                                    aria-label="Show password" aria-pressed="false">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke-width="1.8"/>
+                                    <circle cx="12" cy="12" r="2.5" stroke-width="1.8"/>
+                                </svg>
+                            </button>
+                        </div>
+                        {{ form.password2.errors }}
+                    </div>
+
+                    <button type="submit"
+                            class="mt-2 flex w-full items-center justify-center gap-3 rounded-xl
+                                   border-2 border-[#E9AD19]
+                                   bg-gradient-to-r from-[#A9001B] via-[#B50924] to-[#920018]
+                                   py-3.5 text-base font-bold text-white
+                                   shadow-[0_7px_15px_rgba(153,17,38,0.18)]
+                                   transition duration-200 hover:brightness-110 active:scale-[0.99]">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m7-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm9-1v6m-3-3h6"
+                                  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Submit Registration
+                    </button>
+                </form>
+
+                <div class="mt-7 border-t border-[#E9DDDE] pt-5 text-center">
+                    <p class="text-sm text-[#6F6265]">
+                        Already have an account?
+                        <a href="{% url 'login' %}" class="font-bold text-[#A10E20] transition hover:text-[#79091A]">
+                            Sign in
+                        </a>
+                    </p>
+                    <p class="mt-4 text-xs leading-5 text-[#817579]">
+                        Registration requires email verification and administrator approval
+                        before your account can access the system.
+                    </p>
                 </div>
-
-                <div>
-                    <label class="block text-sm mb-2">Username</label>
-                    {{ form.username }}
-                    {{ form.username.errors }}
-                </div>
-
-                <div>
-                    <label class="block text-sm mb-2">Work email address</label>
-                    {{ form.email }}
-                    {{ form.email.errors }}
-                </div>
-
-                <div>
-                    <label class="block text-sm mb-2">Password</label>
-                    {{ form.password1 }}
-                    {{ form.password1.errors }}
-                </div>
-
-                <div>
-                    <label class="block text-sm mb-2">Confirm password</label>
-                    {{ form.password2 }}
-                    {{ form.password2.errors }}
-                </div>
-
-                <button type="submit"
-                    class="w-full py-3.5 rounded-xl bg-blue-600
-                    hover:bg-blue-500 font-semibold text-white
-                    shadow-lg shadow-blue-600/20 transition">
-                    Submit Registration
-                </button>
-
-            </form>
-
-            <div class="mt-7 pt-6 border-t border-slate-800 text-center">
-                <p class="text-sm text-slate-500">
-                    Already have an account?
-
-                    <a href="{% url 'login' %}"
-                        class="text-blue-400 hover:text-blue-300 font-semibold">
-                        Sign in
-                    </a>
-                </p>
-
-                <p class="text-xs text-slate-600 mt-5">
-                    Registration requires email verification
-                    and administrator approval.
-                </p>
             </div>
+        </section>
+    </main>
 
-        </div>
+    <style>
+        .register-form input {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            border: 1px solid #E7DDDE;
+            border-radius: 12px;
+            background: rgba(255,255,255,.58);
+            padding: 13px 15px;
+            color: #241B1C;
+            font-size: .875rem;
+            line-height: 1.4rem;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(45,20,25,.07);
+            backdrop-filter: blur(8px);
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
 
-    </section>
+        .register-form .password-field input {
+            padding-right: 3.25rem;
+        }
 
-</main>
+        .register-form input:focus {
+            border-color: #A10E20;
+            background: rgba(255,255,255,.78);
+            box-shadow: 0 0 0 4px rgba(161,14,32,.08);
+        }
 
-<style>
-    input {
-        width: 100%;
-        padding: 13px 15px;
-        border-radius: 12px;
-        background: #111b2d;
-        border: 1px solid #263449;
-        color: white;
-        outline: none;
-        transition: .2s;
-    }
+        .register-form input::placeholder {
+            color: #9A9092;
+        }
 
-    input:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 2px rgb(59 130 246 / 15%);
-    }
+        .register-form .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            display: flex;
+            transform: translateY(-50%);
+            align-items: center;
+            color: #6F6265;
+            transition: color .2s;
+        }
 
-    input::placeholder {
-        color: #64748b;
-    }
+        .register-form .password-toggle:hover {
+            color: #A10E20;
+        }
 
-    ul.errorlist {
-        color: #f87171;
-        font-size: 12px;
-        margin-top: 5px;
-        list-style: none;
-    }
-</style>
+        .register-form ul.errorlist {
+            margin-top: .35rem;
+            list-style: none;
+            color: #B42332;
+            font-size: .75rem;
+            line-height: 1.2rem;
+        }
 
+        @media (max-width: 639px) {
+            .register-form input { padding-top: 12px; padding-bottom: 12px; }
+        }
+    </style>
+
+    <script>
+        (() => {
+            document.querySelectorAll(".password-toggle").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const input = document.getElementById(button.dataset.passwordTarget);
+                    if (!input) return;
+
+                    const show = input.type === "password";
+                    input.type = show ? "text" : "password";
+                    button.setAttribute("aria-pressed", String(show));
+                    button.setAttribute("aria-label", show ? "Hide password" : "Show password");
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
