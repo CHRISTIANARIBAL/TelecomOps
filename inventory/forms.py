@@ -284,6 +284,21 @@ class ProductForm(forms.ModelForm):
 
 class ProductUpdateForm(ProductForm):
 
+    new_stock_quantity = forms.IntegerField(
+        min_value=0,
+        required=False,
+        label="New Stock Quantity"
+    )
+
+    stock_adjustment_reason = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            "rows": 3,
+            "placeholder": "Enter the reason for this stock adjustment..."
+        }),
+        label="Adjustment Reason"
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
