@@ -4,8 +4,9 @@ from django.db.models import Sum, F, Count, Q, Value, IntegerField
 from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator
 from django.db import transaction, IntegrityError
-from .models import Category, Product, StockBalance, ProductImage
+from .models import Category, Product, StockBalance, ProductImage, StockAdjustment
 from .forms import ProductForm, ProductUpdateForm, CategoryForm
+from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.urls import reverse
@@ -373,6 +374,68 @@ def edit_product(request, pk):
 
                     updated_product.save()
 
+                    # ==========================================
+                    # STOCK ADJUSTMENT
+                    # ==========================================
+
+                    new_stock_quantity = form.cleaned_data.get(
+                        "new_stock_quantity"
+                    )
+
+                    adjustment_reason = form.cleaned_data.get(
+                        "stock_adjustment_reason", ""
+                    ).strip()
+
+                    if new_stock_quantity is not None:
+
+                        if updated_product.tracking_type != Product.TrackingType.QUANTITY:
+                            raise ValidationError(
+                                "Manual quantity adjustment is only available for quantity-based products."
+                            )
+
+                        if not adjustment_reason:
+                            raise ValidationError(
+                                "Please provide a reason for the stock adjustment."
+                            )
+
+                        # Retrieve and lock the existing stock balance.
+                        stock_balance, _ = StockBalance.objects.get_or_create(
+                            product=updated_product
+                        )
+
+                        stock_balance = StockBalance.objects.select_for_update().get(
+                            pk=stock_balance.pk
+                        )
+
+                        previous_quantity = stock_balance.quantity_on_hand
+
+                        # Prevent stock from going below reserved quantity.
+                        if new_stock_quantity < stock_balance.quantity_reserved:
+                            raise ValidationError(
+                                f"New stock cannot be lower than reserved stock "
+                                f"({stock_balance.quantity_reserved})."
+                            )
+
+                        quantity_change = new_stock_quantity - previous_quantity
+
+                        # Only record an adjustment when the quantity actually changes.
+                        if quantity_change != 0:
+
+                            stock_balance.quantity_on_hand = new_stock_quantity
+
+                            stock_balance.save(
+                                update_fields=["quantity_on_hand", "updated_at"]
+                            )
+
+                            StockAdjustment.objects.create(
+                                product=updated_product,
+                                adjusted_by=request.user,
+                                previous_quantity=previous_quantity,
+                                new_quantity=new_stock_quantity,
+                                quantity_change=quantity_change,
+                                reason=adjustment_reason,
+                            )
+
                     # Save additional product gallery images.
                     uploaded_images = request.FILES.getlist("images")
 
@@ -391,6 +454,10 @@ def edit_product(request, pk):
                 )
 
                 return redirect("inventory:products")
+
+            except ValidationError as error:
+                for message in error.messages:
+                    form.add_error(None, message)
 
             except IntegrityError:
                 messages.error(

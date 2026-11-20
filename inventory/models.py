@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.conf import settings
 from django.db.models import Sum
 
 
@@ -150,6 +151,38 @@ class StockBalance(models.Model):
     @property
     def available_stock(self):
         return self.quantity_on_hand - self.quantity_reserved
+
+class StockAdjustment(models.Model):
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        related_name="stock_adjustments"
+    )
+
+    adjusted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="stock_adjustments"
+    )
+
+    previous_quantity = models.PositiveIntegerField()
+
+    new_quantity = models.PositiveIntegerField()
+
+    quantity_change = models.IntegerField()
+
+    reason = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self):
+        return f"{self.product.name} - {self.quantity_change:+d}"
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

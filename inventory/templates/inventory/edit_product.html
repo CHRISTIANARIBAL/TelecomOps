@@ -419,14 +419,99 @@
                     </p>
                 </div>
 
-                <div class="mt-4 rounded-md border border-blue-500/20 bg-blue-500/5 p-3">
-                    <p class="text-[11px] text-blue-300 font-medium">
-                        Stock quantity is not editable here.
-                    </p>
-                    <p class="text-[10px] text-slate-400 mt-1">
-                        Use Stock Management to record stock additions, releases, and adjustments.
-                    </p>
+                <!-- STOCK ADJUSTMENT -->
+                {% if product.tracking_type == "QUANTITY" %}
+
+                <div class="mt-5 border-t border-slate-700 pt-5">
+
+                    <div class="mb-4">
+                        <h4 class="text-xs font-semibold text-white">
+                            Stock Quantity Adjustment
+                        </h4>
+                        <p class="text-[10px] text-slate-400 mt-1">
+                            Update the actual stock quantity. Every adjustment will be recorded.
+                        </p>
+                    </div>
+
+                    <!-- CURRENT STOCK -->
+                    <div class="mb-4 max-w-md">
+                        <label class="block text-xs text-slate-400 mb-1.5">
+                            Current Stock Quantity
+                        </label>
+
+                        <div class="bg-white border border-slate-700 rounded-md px-3 py-3">
+                            <span class="text-lg font-semibold text-white">
+                                {{ product.total_stock }}
+                            </span>
+                            <span class="text-[10px] text-slate-400 ml-1">
+                                {{ product.unit_of_measure }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <!-- NEW STOCK QUANTITY -->
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5">
+                                New Stock Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                name="new_stock_quantity"
+                                value="{{ form.new_stock_quantity.value|default:'' }}"
+                                min="0"
+                                step="1"
+                                placeholder="Leave blank to keep current stock"
+                                class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+
+                            <p class="text-[10px] text-slate-500 mt-1">
+                                Enter the desired final stock quantity.
+                            </p>
+
+                            {% for error in form.new_stock_quantity.errors %}
+                                <p class="text-[10px] text-red-400 mt-1">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- ADJUSTMENT REASON -->
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5">
+                                Adjustment Reason
+                            </label>
+
+                            <textarea
+                                name="stock_adjustment_reason"
+                                rows="3"
+                                placeholder="Explain why the stock quantity is changing..."
+                                class="w-full bg-[#080d19] border border-slate-700 rounded-md px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">{{ form.stock_adjustment_reason.value|default:'' }}</textarea>
+
+                            {% for error in form.stock_adjustment_reason.errors %}
+                                <p class="text-[10px] text-red-400 mt-1">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4 rounded-md border border-amber-500/20 bg-amber-500/5 p-3">
+                        <p class="text-[11px] text-amber-300 font-medium">
+                            Important
+                        </p>
+                        <p class="text-[10px] text-slate-400 mt-1">
+                            Stock adjustments are recorded with the employee's account,
+                            previous quantity, new quantity, and reason.
+                            Stock cannot be reduced below reserved quantities.
+                        </p>
+                    </div>
+
                 </div>
+
+                {% endif %}
 
             </div>
         </div>
@@ -435,12 +520,12 @@
         <div class="flex flex-wrap justify-end gap-2">
 
             <a href="{% url 'inventory:products' %}"
-                class="px-4 py-2.5 rounded-md border border-slate-700 text-slate-300 text-xs hover:bg-slate-800 transition">
+                class="px-4 py-2.5 rounded-md bg-white border border-slate-700 text-slate-300 text-xs hover:bg-[#F2F3F5] transition">
                 Cancel
             </a>
 
             <button type="submit"
-                class="px-5 py-2.5 rounded-md bg-emerald-400 text-white text-xs font-semibold hover:bg-emeral-400 transition">
+                class="px-5 py-2.5 border border-slate-700 rounded-md bg-white text-white text-xs hover:bg-[#F2F3F5] transition">
                 Update Product
             </button>
 

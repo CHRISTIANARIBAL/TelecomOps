@@ -1,0 +1,20 @@
+* [33m99d177c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Merge latest GitHub master with TelecomOps updates
+* [33mb1800f6[m[33m ([m[1;32mipdate1[m[33m)[m update
+[31m|[m *   [33m93cff6d[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #3 from CHRISTIANARIBAL/ipdate1
+[31m|[m [32m|[m[31m\[m  
+[31m|[m [32m|[m[31m/[m  
+[31m|[m[31m/[m[32m|[m   
+* [32m|[m [33m2b5c0ea[m[33m ([m[1;31morigin/ipdate1[m[33m, [m[1;32mcolor[m[33m)[m update1
+[33m|[m *   [33mefa8cf0[m Merge pull request #2 from CHRISTIANARIBAL/color
+[33m|[m [34m|[m[33m\[m  
+[33m|[m [34m|[m[33m/[m  
+[33m|[m[33m/[m[34m|[m   
+* [34m|[m [33m91d1807[m[33m ([m[1;31morigin/color[m[33m, [m[1;32mrepeat[m[33m)[m update colors
+[35m|[m *   [33m774d8db[m Merge pull request #1 from CHRISTIANARIBAL/repeat
+[35m|[m [36m|[m[35m\[m  
+[35m|[m [36m|[m[35m/[m  
+[35m|[m[35m/[m[36m|[m   
+* [36m|[m [33m8c451eb[m[33m ([m[1;31morigin/update2[m[33m, [m[1;31morigin/repeat[m[33m, [m[1;32mupdate_theme[m[33m, [m[1;32mupdate2[m[33m)[m repeat
+[36m|[m[36m/[m  
+* [33m4ea93ea[m[33m ([m[1;31morigin/update_theme[m[33m)[m trial
+* [33m682c4db[m Initial commit: TelecomOps system
