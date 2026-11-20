@@ -1,0 +1,18 @@
+bdcom - show gpon inactive onu
+vsol - 
+
+
+
+button hover = hover:bg-[#F2F3F5]
+border = border-slate-700
+general bg = bg-white
+sub/legend bg = bg-[#F0F2F5]
+
+
+git branch
+git pull origin branch_name
+
+git stash push -m "Backup local CSS changes"
+git pull origin master
+
+PARE KO - Eraserheads (Acoustic Cover) | Soft Kaps

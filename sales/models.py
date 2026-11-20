@@ -46,6 +46,12 @@ class Sale(models.Model):
         related_name="released_sales",
     )
 
+    released_by_name = models.CharField(
+        max_length=200,
+        blank=True,
+        default="",
+    )
+
     sale_date = models.DateTimeField(auto_now_add=True)
 
     subtotal = models.DecimalField(

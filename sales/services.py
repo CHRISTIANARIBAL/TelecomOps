@@ -17,7 +17,8 @@ def create_sale(
     unit_price,
     buyer_name,
     processed_by,
-    released_by,
+    released_by=None,
+    released_by_name="",
     customer=None,
     notes="",
 ):
@@ -72,6 +73,7 @@ def create_sale(
         buyer_name=buyer_name,
         processed_by=processed_by,
         released_by=released_by,
+        released_by_name=released_by_name,
         subtotal=subtotal,
         discount=Decimal("0.00"),
         total_amount=subtotal,

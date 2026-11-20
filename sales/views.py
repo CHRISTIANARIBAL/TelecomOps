@@ -59,6 +59,7 @@ def sell_product(request, product_id):
                     customer=form.cleaned_data["customer"],
                     processed_by=request.user,
                     released_by=form.cleaned_data["released_by"],
+                    released_by_name=form.cleaned_data["released_by_name"],
                     notes=form.cleaned_data["notes"],
                 )
 

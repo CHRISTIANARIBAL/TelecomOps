@@ -134,37 +134,69 @@
 
             <!-- RELEASED BY -->
             <div>
-                <label for="employee_search" class="block text-xs text-slate-300 mb-2">
+                <label class="block text-xs text-slate-300 mb-2">
                     Released By (Employee)
                 </label>
 
-                <input
-                    type="text"
-                    id="employee_search"
-                    placeholder="Search employee by name or username..."
-                    autocomplete="off"
-                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none mb-2"
-                >
+                <div class="flex gap-2 mb-3">
+                    <button type="button"
+                            id="existingEmployeeBtn"
+                            class="px-3 py-2 rounded-md bg-white border border-slate-700 hover:bg-[#F2F3F5] text-white text-xs">
+                        Existing Employee
+                    </button>
 
-                <select
-                    name="released_by"
-                    id="id_released_by"
-                    required
-                    class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:border-blue-500 outline-none"
-                >
-                    <option value="">Select releasing employee</option>
+                    <button type="button"
+                            id="newEmployeeBtn"
+                            class="px-3 py-2 rounded-md bg-white text-slate-700 hover:bg-[#F2F3F5] border border-slate-700 text-xs">
+                        Add New Employee
+                    </button>
+                </div>
 
-                    {% for employee in form.fields.released_by.queryset %}
-                        <option
-                            value="{{ employee.pk }}"
-                            {% if form.released_by.value|stringformat:"s" == employee.pk|stringformat:"s" %}selected{% endif %}
-                        >
-                            {{ employee.get_full_name|default:employee.username }} (@{{ employee.username }})
-                        </option>
-                    {% endfor %}
-                </select>
+                <!-- EXISTING EMPLOYEE -->
+                <div id="existingEmployeeSection">
+                    <input
+                        type="text"
+                        id="employee_search"
+                        placeholder="Search employee..."
+                        autocomplete="off"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white mb-2"
+                    >
+
+                    <select
+                        name="released_by"
+                        id="id_released_by"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white"
+                    >
+                        <option value="">Select existing employee</option>
+
+                        {% for employee in form.fields.released_by.queryset %}
+                            <option value="{{ employee.pk }}"
+                                {% if form.released_by.value|stringformat:"s" == employee.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ employee.get_full_name|default:employee.username }}
+                                (@{{ employee.username }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- NEW EMPLOYEE -->
+                <div id="newEmployeeSection" class="hidden">
+                    <input
+                        type="text"
+                        name="released_by_name"
+                        id="id_released_by_name"
+                        maxlength="200"
+                        value="{{ form.released_by_name.value|default:'' }}"
+                        placeholder="Enter employee's full name"
+                        class="w-full bg-[#080d19] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white"
+                    >
+                </div>
 
                 {% for error in form.released_by.errors %}
+                    <p class="text-xs text-red-400 mt-1">{{ error }}</p>
+                {% endfor %}
+
+                {% for error in form.released_by_name.errors %}
                     <p class="text-xs text-red-400 mt-1">{{ error }}</p>
                 {% endfor %}
             </div>
@@ -260,7 +292,46 @@ document.addEventListener("DOMContentLoaded", function () {
     const buyerName = document.getElementById("id_buyer_name");
     const employeeSearch = document.getElementById("employee_search");
     const employeeSelect = document.getElementById("id_released_by");
+    const existingBtn = document.getElementById("existingEmployeeBtn");
+    const newBtn = document.getElementById("newEmployeeBtn");
 
+    const existingSection = document.getElementById("existingEmployeeSection");
+    const newSection = document.getElementById("newEmployeeSection");
+    const employeeName = document.getElementById("id_released_by_name");
+
+    function setEmployeeMode(mode) {
+        const isExisting = mode === "existing";
+
+        existingSection.classList.toggle("hidden", !isExisting);
+        newSection.classList.toggle("hidden", isExisting);
+
+        employeeSelect.disabled = !isExisting;
+        employeeName.disabled = isExisting;
+
+        existingBtn.classList.toggle("bg-white", isExisting);
+        existingBtn.classList.toggle("text-white", isExisting);
+        existingBtn.classList.toggle("bg-white", !isExisting);
+        existingBtn.classList.toggle("text-slate-700", !isExisting);
+
+        newBtn.classList.toggle("bg-blue-600", !isExisting);
+        newBtn.classList.toggle("text-white", !isExisting);
+        newBtn.classList.toggle("bg-white", isExisting);
+        newBtn.classList.toggle("text-slate-700", isExisting);
+    }
+
+    existingBtn.addEventListener("click", () => {
+        employeeName.value = "";
+        setEmployeeMode("existing");
+    });
+
+    newBtn.addEventListener("click", () => {
+        employeeSelect.value = "";
+        setEmployeeMode("new");
+    });
+
+    setEmployeeMode(
+        employeeName.value.trim() ? "new" : "existing"
+    );
     if (employeeSearch && employeeSelect) {
         employeeSearch.addEventListener("input", function () {
             const searchValue = this.value.toLowerCase().trim();

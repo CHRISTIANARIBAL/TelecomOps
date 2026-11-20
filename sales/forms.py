@@ -21,8 +21,16 @@ class SaleForm(forms.Form):
             email_verified=True,
             approval_status=User.ApprovalStatus.APPROVED,
         ).order_by("first_name", "last_name"),
-        required=True,
-        empty_label="Select releasing employee",
+        required=False,
+        empty_label="Select existing employee",
+    )
+
+    released_by_name = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Enter new employee's full name",
+        }),
     )
 
     buyer_name = forms.CharField(
@@ -52,6 +60,8 @@ class SaleForm(forms.Form):
         }),
     )
 
+    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -67,6 +77,25 @@ class SaleForm(forms.Form):
 
         customer = cleaned_data.get("customer")
         buyer_name = (cleaned_data.get("buyer_name") or "").strip()
+
+        released_by = cleaned_data.get("released_by")
+        released_by_name = (
+            cleaned_data.get("released_by_name") or ""
+        ).strip()
+
+        if not released_by and not released_by_name:
+            self.add_error(
+                "released_by",
+                "Select an existing employee or enter a new employee name."
+            )
+
+        if released_by and released_by_name:
+            self.add_error(
+                "released_by_name",
+                "Choose either an existing employee or a manually entered name."
+            )
+
+        cleaned_data["released_by_name"] = released_by_name
 
         if not customer and not buyer_name:
             self.add_error(
